@@ -7,24 +7,26 @@ import operator
 import os
 listOfHouses = ['gryffindor', 'ravenclaw', 'hufflepuff', 'slytherin', 'nqfy']
 
+
 def analysePage(options):
     """
     This function analyses the page and stores all found projects into a pandas dataframe
 
     returns a pandas dataframe with all projects of all houses within the defined range.
-    
+
     """
     with open("categories.json", 'r') as file:
         categories = json.load(file)
     with open(options['pagePath'], 'r', encoding='utf-8') as htmlfile:
         content = htmlfile.read()
 
-    df = pd.DataFrame({'id':[],
-                    'name': [],
-                    'date': [],
-                    'project': [],
-                    'house': [],
-                    'love': []})
+    df = pd.DataFrame({
+        'id': [],
+        'name': [],
+        'date': [],
+        'project': [],
+        'house': [],
+        'love': []})
 
     soup = BeautifulSoup(content, 'html.parser')
 
@@ -36,7 +38,7 @@ def analysePage(options):
         try:
             id = int(tempSoup.find_all(class_="post_number")[0].getText())
             allPostId.append(id)
-        except:
+        except KeyError:
             try:
                 tempSoup = BeautifulSoup(str(post), 'html.parser')
                 body = tempSoup.find_all(class_="empty_post")[0].getText()
@@ -46,28 +48,29 @@ def analysePage(options):
                     # post deleted
                     # print("found deleted post")
                     continue
-            except:
+            except IndexError:
                 errorLog("I can't interpretate this post. Something is wrong with it. I pushed in an error.txt file!", post)
                 continue
         # Body
         tempSoup = BeautifulSoup(str(post), 'html.parser')
         body = tempSoup.find_all(class_="body forum_post_body")[0].getText()
+        name = tempSoup.find_all(class_="login")[0].getText()
         # nameBody = re.findall('(?i)name:([a-zA-Z\d\s]+)house:', str(body))[0].replace(' ', '')
         try:
-            nameBody = re.findall('(?i)name:?\s?([a-zA-Z\d]{2,40})[,.\s]', str(body))
-            nameBody = nameBody[0].replace(' ', '')
-            house = re.findall('(?i)house:?\s?([a-zA-Z\d]{2,11})[,.\s]', str(body))
+            # nameBody = re.findall(r'(?i)name:?\s?([a-zA-Z\d]{2,40})[,.\s]', str(body))
+            # nameBody = nameBody[0].replace(' ', '')
+            house = re.findall(r'(?i)(?:name)?:?\s?' + name + r'[,.\s](?i)(?:house)?:?\s?([a-zA-Z\d]{2,11})[,.\s]', str(body))
             house = house[0].replace(' ', '')
             house = house.lower()
             if house[-1] == 's':
                 house = house[:-1]
-            if not house in listOfHouses:
-                errorLog("[PostID: " + str(id) + "] Unknown house: " + house + " from " + nameBody, body)
+            if house not in listOfHouses:
+                errorLog("[PostID: " + str(id) + "] Unknown house: " + house + " from " + name, body)
 
             # verb
             listOfVerbs = {}
             for cat in categories['crafts']:
-                ls = re.findall("\s" + cat[0], str(body))
+                ls = re.findall(r"\s" + cat[0], str(body))
                 if len(ls) > 0:
                     listOfVerbs[cat[2]] = len(ls)
             listOfVerbs = sorted(listOfVerbs.items(), key=lambda ele: ele[1])
@@ -82,7 +85,7 @@ def analysePage(options):
             # project
             project = 'thing'
             for cat in categories['projects']:
-                ls = re.findall("\s(" + cat + "[a-z]+)\s", str(body), re.IGNORECASE)
+                ls = re.findall(r'\s(' + cat + r'[a-z]+)\s', str(body), re.IGNORECASE)
                 if len(ls) > 0:
                     project = ls[0].lower()
                     # print(project)
@@ -91,36 +94,38 @@ def analysePage(options):
         except (IndexError):
             continue
         # Username
-        tempSoup = BeautifulSoup(str(post), 'html.parser')
-        name = tempSoup.find_all(class_="login")[0].getText()
-        if name.lower() != nameBody.lower():
-            errorLog('[PostID: ' + str(id) + '] warning: names doesnt match: ' + name + ' <> ' + nameBody, body)
+        # tempSoup = BeautifulSoup(str(post), 'html.parser')
+        # name = tempSoup.find_all(class_="login")[0].getText()
+        # if name.lower() != nameBody.lower():
+        #     errorLog('[PostID: ' + str(id) + '] warning: names doesnt match: ' + name + ' <> ' + nameBody, body)
         # PostDate
         tempSoup = BeautifulSoup(str(post), 'html.parser')
         date = tempSoup.find_all(class_="time")
-        date = re.findall('<abbr title="([a-zA-Z\d,:\s]+)', str(date))
+        date = re.findall(r'<abbr title="([a-zA-Z\d,:\s]+)', str(date))
         love = tempSoup.find_all(class_="reaction_button--love")[0].getText()
         try:
-            love = int(re.findall('\(([\d]+)\)', str(love))[0])
-        except:
+            love = int(re.findall(r'\(([\d]+)\)', str(love))[0])
+        except IndexError:
             love = 0
-        # print(date)        
-        df2 = pd.DataFrame({'id':[id],
-                            'name': [name],
-                            'date': [date[0]],
-                            'project': [project],
-                            'house': [house],
-                            'love': [love],
-                            'verb': [verb]})
-        #add new row to end of DataFrame
-        df = df.append(df2, ignore_index = True)    
+        # print(date)
+        df2 = pd.DataFrame({
+            'id': [id],
+            'name': [name],
+            'date': [date[0]],
+            'project': [project],
+            'house': [house],
+            'love': [love],
+            'verb': [verb]})
+        # a dd new row to end of DataFrame
+        df = df.append(df2, ignore_index=True)
         # print(id + ": " + name)
-    
+
     if options['endPost'] > -1:
-        selPost = df[(df.id>=options['startPost'] & df.id<=options['endPost'])]
+        selPost = df[(df.id >= options['startPost'] & df.id <= options['endPost'])]
     else:
-        selPost = df[(df.id>=options['startPost'])]
+        selPost = df[(df.id >= options['startPost'])]
     return selPost
+
 
 def writePost(df, options, outputFile='message.md'):
     """
@@ -134,7 +139,7 @@ def writePost(df, options, outputFile='message.md'):
     """
     rank = {}
     for i, h in enumerate(listOfHouses[:-1]):
-        rank[h] = len(df[df.house==h])
+        rank[h] = len(df[df.house == h])
     rank = sorted(rank.items(), key=operator.itemgetter(1), reverse=True)
 
     message = "Congratulations for everyone who got their wonderful scores in the past few days!!!\n\n"
@@ -150,7 +155,7 @@ def writePost(df, options, outputFile='message.md'):
             message = message + "   " + el[0] + " with " + str(el[1]) + " projects\n"
             cnt -= 1
         if cnt == 1:
-            if winner  == '':
+            if winner == '':
                 winner = el[0]
             else:
                 winner = winner + ', ' + el[0]
@@ -164,14 +169,15 @@ def writePost(df, options, outputFile='message.md'):
     postlink = options['url']
     if postlink[-1] != '/':
         postlink = postlink + '/'
-    for index, row in df[df.house==options['sHouse'].lower()].iterrows():
-        message = message + "[" + row['name'] + "](https://www.ravelry.com/people/" + row['name']+ ") " + row['verb'] + " this super cool "
+    for index, row in df[df.house == options['sHouse'].lower()].iterrows():
+        message = message + "[" + row['name'] + "](https://www.ravelry.com/people/" + row['name'] + ") " + row['verb'] + " this super cool "
         sRange = math.floor(float(row['id'])/25)*25+1
         eRange = sRange + 24
         range = str(sRange) + "-" + str(eRange) + "#" + str(row['id']).replace('.0', '')
         message = message + "[" + row['project'] + "](" + postlink + range + "). How cool is that."
         if row['love'] > 4:
-            message = message + " Wow!! " + str(row['love']) + " loved this amazing peace of " + row['project'] + ". You have a run, " + row['name'] + ". Keep on crafting.\n\n"
+            message = message + " Wow!! " + str(row['love']) + " loved this amazing peace of " + \
+                 row['project'] + ". You have a run, " + row['name'] + ". Keep on crafting.\n\n"
         else:
             message = message + "\n\n"
 
@@ -184,6 +190,7 @@ def writePost(df, options, outputFile='message.md'):
         return "File written"
     else:
         return message
+
 
 def errorLog(msg, log):
     """
@@ -201,7 +208,8 @@ def errorLog(msg, log):
     print(msg)
 
     return None
-        
+
+
 def main():
     """
     main program
@@ -217,6 +225,7 @@ def main():
     print("File message.md written.")
 
     return None
-    
+
+
 if __name__ == '__main__':
     main()
