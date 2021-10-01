@@ -1,0 +1,7 @@
+json
+request
+bs4
+smtplib
+ssl
+re
+mysql-connector

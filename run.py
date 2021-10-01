@@ -1,230 +1,135 @@
 import json
-import pandas as pd
-import re
-from bs4 import BeautifulSoup
-import math
-import operator
-import os
-listOfHouses = ['gryffindor', 'ravenclaw', 'hufflepuff', 'slytherin', 'nqfy']
+import csv
+import datetime
+from requests import Session
+from bs4 import BeautifulSoup as bs
+import read_website
+import database_functions as dbf
+import sendmail
+
+base_url = r'https://www.ravelry.com'
+group_url = r'/discuss/hp-knitting-crochet-house-cup'
 
 
-def analysePage(options):
-    """
-    This function analyses the page and stores all found projects into a pandas dataframe
+def get_posts():
+    with open('credentials.json', 'r') as file:
+        credentials = json.load(file)
 
-    returns a pandas dataframe with all projects of all houses within the defined range.
+    with open('hp_classes.json', 'r') as file:
+        class_pages = json.load(file)
 
-    """
-    with open("categories.json", 'r') as file:
-        categories = json.load(file)
-    with open(options['pagePath'], 'r', encoding='utf-8') as htmlfile:
-        content = htmlfile.read()
+    with Session() as s:
+        site = s.get(base_url + r'/account/login')
+        bs_content = bs(site.content, 'html.parser')
+        token = bs_content.find('input', {'name': 'authenticity_token'})['value']
+        login_data = {
+            'user[login]': credentials['ravelry']['username'],
+            'user[password]': credentials['ravelry']['password'],
+            'authenticity_token': token,
+            'origin': 'splash',
+            'return_to': ''}
 
-    df = pd.DataFrame({
-        'id': [],
-        'name': [],
-        'date': [],
-        'project': [],
-        'house': [],
-        'love': []})
+        s.post(base_url + r'/account/login', login_data)
+        home_page = s.get(base_url)
+        bs_content = bs(home_page.content, 'html.parser')
+        token = bs_content.find('meta', {'name': 'authenticity-token'})['content']
 
-    soup = BeautifulSoup(content, 'html.parser')
-
-    posts = soup.find_all(class_="forum_post_row")
-    allPostId = []
-    for post in posts:
-        # Post ID
-        tempSoup = BeautifulSoup(str(post), 'html.parser')
-        try:
-            id = int(tempSoup.find_all(class_="post_number")[0].getText())
-            allPostId.append(id)
-        except KeyError:
-            try:
-                tempSoup = BeautifulSoup(str(post), 'html.parser')
-                body = tempSoup.find_all(class_="empty_post")[0].getText()
-                ls = re.findall("delete", body, re.IGNORECASE)
-                if len(ls) > 0:
-                    errorLog("found deleted post", post)
-                    # post deleted
-                    # print("found deleted post")
-                    continue
-            except IndexError:
-                errorLog("I can't interpretate this post. Something is wrong with it. I pushed in an error.txt file!", post)
-                continue
-        # Body
-        tempSoup = BeautifulSoup(str(post), 'html.parser')
-        body = tempSoup.find_all(class_="body forum_post_body")[0].getText()
-        name = tempSoup.find_all(class_="login")[0].getText()
-        # nameBody = re.findall('(?i)name:([a-zA-Z\d\s]+)house:', str(body))[0].replace(' ', '')
-        try:
-            # nameBody = re.findall(r'(?i)name:?\s?([a-zA-Z\d]{2,40})[,.\s]', str(body))
-            # nameBody = nameBody[0].replace(' ', '')
-            house = re.findall(r'(?i)(?:name)?:?\s?' + name + r'[,.\s](?i)(?:house)?:?\s?([a-zA-Z\d]{2,11})[,.\s]', str(body))
-            house = house[0].replace(' ', '')
-            house = house.lower()
-            if house[-1] == 's':
-                house = house[:-1]
-            if house not in listOfHouses:
-                errorLog("[PostID: " + str(id) + "] Unknown house: " + house + " from " + name, body)
-
-            # verb
-            listOfVerbs = {}
-            for cat in categories['crafts']:
-                ls = re.findall(r"\s" + cat[0], str(body))
-                if len(ls) > 0:
-                    listOfVerbs[cat[2]] = len(ls)
-            listOfVerbs = sorted(listOfVerbs.items(), key=lambda ele: ele[1])
-            # print(listOfVerbs)
-            verb = ''
-            if len(listOfVerbs) > 0:
-                verb = listOfVerbs[0][0]
-                # print(verb)
+        database = []
+        for page in class_pages:
+            site = s.get(base_url + group_url + r'/' + page['id'])
+            soup = bs(site.content, 'html.parser')
+            count_pages_soup = soup.find_all(class_='page_bar__page')
+            count_pages = 1
+            if len(count_pages_soup) != 0:
+                count_pages = int(count_pages_soup[-1].getText())
+                print(page['name'] + ' hat ' + count_pages_soup[-1].getText() + ' Seiten.')
             else:
-                verb = 'made'
+                print(page['name'] + ' hat eine Seite.')
+            for i in range(0, count_pages):
+                further_data = {
+                    'class_id': page['id'],
+                    'url': base_url + group_url + r'/' + page['id'] + '/' + str(i*25+1) + '-' + str(i*25+25)
+                }
+                site = s.get(base_url + group_url + r'/' + page['id'] + '/' + str(i*25+1) + '-' + str(i*25+25))
+                result = read_website.analysePage(site.content, further_data)
+                database.extend(result)
+                # print(base_url + group_url + r'/' + page['id'] + '/' + str(i*25+1) + '-' + str(i*25+25))
+        # run program
 
-            # project
-            project = 'thing'
-            for cat in categories['projects']:
-                ls = re.findall(r'\s(' + cat + r'[a-z]+)\s', str(body), re.IGNORECASE)
-                if len(ls) > 0:
-                    project = ls[0].lower()
-                    # print(project)
-                    break
-            # print(body)
-        except (IndexError):
-            continue
-        # Username
-        # tempSoup = BeautifulSoup(str(post), 'html.parser')
-        # name = tempSoup.find_all(class_="login")[0].getText()
-        # if name.lower() != nameBody.lower():
-        #     errorLog('[PostID: ' + str(id) + '] warning: names doesnt match: ' + name + ' <> ' + nameBody, body)
-        # PostDate
-        tempSoup = BeautifulSoup(str(post), 'html.parser')
-        date = tempSoup.find_all(class_="time")
-        date = re.findall(r'<abbr title="([a-zA-Z\d,:\s]+)', str(date))
-        love = tempSoup.find_all(class_="reaction_button--love")[0].getText()
-        try:
-            love = int(re.findall(r'\(([\d]+)\)', str(love))[0])
-        except IndexError:
-            love = 0
-        # print(date)
-        df2 = pd.DataFrame({
-            'id': [id],
-            'name': [name],
-            'date': [date[0]],
-            'project': [project],
-            'house': [house],
-            'love': [love],
-            'verb': [verb]})
-        # a dd new row to end of DataFrame
-        df = df.append(df2, ignore_index=True)
-        # print(id + ": " + name)
+        s.post(base_url + r'/account/logout', {'authenticity_token': token})
 
-    if options['endPost'] > -1:
-        selPost = df[(df.id >= options['startPost'] & df.id <= options['endPost'])]
+    return database
+
+
+def inform_user():
+    start, end, day = get_time(-9)
+    with open('listOfHouses.json', 'r') as file:
+        listOfHouses = json.load(file)
+
+    with open('hp_classes.json', 'r') as file:
+        class_pages = json.load(file)
+    class_list = []
+    for clss in class_pages:
+        class_list.append(clss['id'])
+
+    posts = dbf.read_posts(class_list, start, end)
+    results = []
+    for clss in class_pages:
+        element = {}
+        element['class'] = clss
+        element['day'] = day
+        element['houses'] = {}
+        for house in listOfHouses:
+            element['houses'][house] = {'value': 0, 'posts': []}
+
+        # print(len(posts))
+        for post in posts:
+            # print(str(type(clss['id'])) + " == " + str(type(post['class_id'])))
+            if int(clss['id']) == int(post['class_id']):
+                element['houses'][post['house']]['value'] += 1
+                element['houses'][post['house']]['posts'].append({
+                    'name': post['name'],
+                    'url': post['url']
+                })
+        results.append(element)
+
+    text, html = sendmail.create_text("Name", results)
+    # print(html)
+    sendmail.send("a@b.com", text, html)
+
+
+def get_time(diff_to_utc=0, day=0):
+    """
+    get timestamp for yesterday in defined timezone
+    """
+    if day == 0:
+        day = datetime.datetime.today() - datetime.timedelta(days=1)
     else:
-        selPost = df[(df.id >= options['startPost'])]
-    return selPost
+        # prüfen was day ist..
+        day = day
 
-
-def writePost(df, options, outputFile='message.md'):
-    """
-    df: pandas dataframe
-    options: dictionary
-    outputFile: string (optional)
-
-    This function writes all rows of df into a file, defined in outputFile. In the options are some additional parameters.
-
-    returns a string. If an empty string is given in the outputFile, the post message will be returned.
-    """
-    rank = {}
-    for i, h in enumerate(listOfHouses[:-1]):
-        rank[h] = len(df[df.house == h])
-    rank = sorted(rank.items(), key=operator.itemgetter(1), reverse=True)
-
-    message = "Congratulations for everyone who got their wonderful scores in the past few days!!!\n\n"
-    message = message + "Each house worked really hard. The ranking is:\n\n"
-
-    prev = -1
-    cnt = 1
-    winner = ''
-    for i, el in enumerate(rank):
-        if el[1] != prev:
-            message = message + str(cnt) + ". " + el[0] + " with " + str(el[1]) + " projects\n"
-        else:
-            message = message + "   " + el[0] + " with " + str(el[1]) + " projects\n"
-            cnt -= 1
-        if cnt == 1:
-            if winner == '':
-                winner = el[0]
-            else:
-                winner = winner + ', ' + el[0]
-
-        cnt += 1
-        prev = el[1]
-    message = message + "\nCongratulation to " + winner + "!\n\n"
-
-    message = message + "The most awsomeness projects were made from " + options['sHouse'] + ". Of Course! Lets take a closer look:\n\n"
-
-    postlink = options['url']
-    if postlink[-1] != '/':
-        postlink = postlink + '/'
-    for index, row in df[df.house == options['sHouse'].lower()].iterrows():
-        message = message + "[" + row['name'] + "](https://www.ravelry.com/people/" + row['name'] + ") " + row['verb'] + " this super cool "
-        sRange = math.floor(float(row['id'])/25)*25+1
-        eRange = sRange + 24
-        range = str(sRange) + "-" + str(eRange) + "#" + str(row['id']).replace('.0', '')
-        message = message + "[" + row['project'] + "](" + postlink + range + "). How cool is that."
-        if row['love'] > 4:
-            message = message + " Wow!! " + str(row['love']) + " loved this amazing peace of " + \
-                 row['project'] + ". You have a run, " + row['name'] + ". Keep on crafting.\n\n"
-        else:
-            message = message + "\n\n"
-
-    message = message + "\nThanks to all of you for your efforts and cant wait to see your amazing crafts on the pitch for next round!!!\n\n"
-    message = message + "**" + options['cheers'] + "** - " + options['author']
-
-    if outputFile != '':
-        with open(outputFile, 'w') as file:
-            file.writelines(message)
-        return "File written"
-    else:
-        return message
-
-
-def errorLog(msg, log):
-    """
-    msg: str, Information about the error
-    log: not defined, normaly the body or the complete post.
-
-    This function write all errors in a file. the file will be appended by each error.
-    Also the msg is printed into the console.
-
-    return None
-    """
-    logEntry = msg + ':\n' + str(log) + '\n ________________________________________________________________________________________________\n'
-    with open('error.txt', 'a') as f:
-        f.write(logEntry)
-    print(msg)
-
-    return None
+    start = datetime.datetime(day.year, day.month, day.day, 0, 0, 0) \
+        - datetime.timedelta(hours=diff_to_utc)  # .timestamp()
+    start_unix = int(start.timestamp())
+    end = datetime.datetime(day.year, day.month, day.day, 23, 59, 59) \
+        - datetime.timedelta(hours=diff_to_utc)
+    end_unix = int(end.timestamp())
+    # print(str(start_unix) + " to " + str(end_unix))
+    return start_unix, end_unix, day
 
 
 def main():
-    """
-    main program
-    """
-    with open('settings.json', 'r') as file:
-        opt = json.load(file)
-    if os.path.exists("error.txt"):
-        os.remove("error.txt")
-    df = analysePage(options=opt)
-    df.to_csv('submittedProjects.csv')
-    writePost(df, opt, outputFile='message.md')
+    database = get_posts()
 
-    print("File message.md written.")
+    # keys = database[0].keys()
+    # with open('db.csv', 'w', newline='') as output_file:
+    #     dict_writer = csv.DictWriter(output_file, keys)
+    #     dict_writer.writeheader()
+    #     dict_writer.writerows(database)
 
-    return None
+    dbf.store_posts(database)
+
+    inform_user()
 
 
 if __name__ == '__main__':
