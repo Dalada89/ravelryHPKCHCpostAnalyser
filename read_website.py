@@ -180,7 +180,9 @@ def interpretate_date(date_ravelry):
     # print("The Date is: " + date_str)
 
     date_date = datetime.datetime.strptime(date_str, '%d. %B %Y, %I:%M %p')
-    date_unix = int(date_date.timestamp())
+    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always a offset of 6h.
+    # Propably it depends on the timezone ?!?!
+    date_unix = int(date_date.timestamp()) + 6*60*60
 
     if date_unix > int(datetime.datetime.now().timestamp()):
         raise ce.DateError('Date is in the future.')
@@ -190,7 +192,7 @@ def interpretate_date(date_ravelry):
 
 def main():
     # ravelry_year = 'Tuesday, September  1 2020 at  1:55 AM'
-    ravelry = 'Sunday, September  5 at  7:12 AM'
+    ravelry = 'Saturday, October  2 at 11:14 AM'
     timestamp = 1630818720
     try:
         val = interpretate_date(ravelry)
