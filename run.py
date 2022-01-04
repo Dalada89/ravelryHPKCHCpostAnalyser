@@ -1,5 +1,4 @@
 import json
-import csv
 import datetime
 from requests import Session
 from bs4 import BeautifulSoup as bs
@@ -80,21 +79,22 @@ def inform_user():
         element['day'] = day
         element['houses'] = {}
         for house in listOfHouses:
-            element['houses'][house] = {'value': 0, 'posts': []}
+            element['houses'][house] = 0
+        element['posts'] = []
 
         # print(len(posts))
         for post in posts:
             # print(str(type(clss['id'])) + " == " + str(type(post['class_id'])))
             if int(clss['id']) == int(post['class_id']):
-                element['houses'][post['house']]['value'] += 1
-                element['houses'][post['house']]['posts'].append({
-                    'name': post['name'],
-                    'url': post['url']
-                })
+                element['houses'][post['house']] += 1
+                element['posts'].append(post)
+        element['posts'] = sorted(element['posts'], key=lambda item: item['post_id'])
         results.append(element)
 
     text, html = sendmail.create_text("Name", results)
-    # print(html)
+
+    # with open(r'test.html', 'w') as htmlfile:
+    #     htmlfile.write(html)
     sendmail.send("a@b.com", text, html)
 
 
@@ -119,7 +119,7 @@ def get_time(diff_to_utc=0, day=0):
 
 
 def main():
-    database = get_posts()
+    # database = get_posts()
 
     # keys = database[0].keys()
     # with open('db.csv', 'w', newline='') as output_file:
@@ -127,7 +127,7 @@ def main():
     #     dict_writer.writeheader()
     #     dict_writer.writerows(database)
 
-    dbf.store_posts(database)
+    # dbf.store_posts(database)
 
     inform_user()
 

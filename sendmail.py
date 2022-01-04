@@ -14,17 +14,17 @@ def create_text(name, results):
 
     for res in results:
         text = text + str(res['day'].day) + "." + str(res['day'].month) + "." + str(res['day'].year) + " - " + str(res['class']['name']) + ":\n"
-        html = html + str(res['day'].day) + "." + str(res['day'].month) + "." + str(res['day'].year) + " - <b>" + str(res['class']['name']) + "</b>:<br>"
+        html += "<h2>" + str(res['day'].day) + "." + str(res['day'].month) + "." + str(res['day'].year)  \
+            + " - " + str(res['class']['name']) + "</h2><br>"
+        html += "<ol><li>Ranking:<ul>"
         for key in res['houses']:
-            text += key + ": " + str(res['houses'][key]['value']) + "\n"
-            html += key + ": " + str(res['houses'][key]['value']) + " ("#+ "<br>"
-            for post in res['houses'][key]['posts']:
-                html += '<a href="' + post['url'] + '">' + post['name'] + '</a>, '
-            html = html[:-2]
-            if len(res['houses'][key]['posts']) > 0:
-                html += ")<br>"
-            else:
-                html += "<br>"
+            text += key + ": " + str(res['houses'][key]) + "\n"
+            html += "<li>" + key + ": " + str(res['houses'][key]) + "</li>"
+        html += "</ul><li>Posts:<ul>"
+        for post in res['posts']:
+            html += "<li>" + '<a href="' + post['url'] + '">' + str(post['post_id']) + '</a> - ' \
+                + post['name'] + ' (<em>' + str(post['house']) + '</em>),</li>'
+        html += "</ul></li></ol>"
         text = text + "\n"
         html = html + "<br>"
 
