@@ -1,0 +1,5 @@
+credentials.json
+__pycache__/
+db.csv
+error.txt
+hp_classes.json
