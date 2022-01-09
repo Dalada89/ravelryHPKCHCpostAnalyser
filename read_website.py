@@ -177,7 +177,7 @@ def detectHouse(content: str, name: str):
         for item in patternlist[key]:
             if found:
                 break
-            pattern = name + r'[\w\s:/]{0,20}(' + item + 's?)'
+            pattern = name + r'[\w\s\W]{0,35}(' + item + 's?)'
 
             match = re.search(pattern, str(content), re.IGNORECASE)
 
@@ -228,7 +228,7 @@ def interpretate_date(date_ravelry):
     # print("The Date is: " + date_str)
 
     date_date = datetime.datetime.strptime(date_str, '%d. %B %Y, %I:%M %p')
-    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always a offset of 6h.
+    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always an offset of 6h.
     # Propably it depends on the timezone ?!?!
     date_unix = int(date_date.timestamp()) + 6*60*60
 
