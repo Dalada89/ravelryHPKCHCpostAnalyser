@@ -142,7 +142,7 @@ def detectHouse(content: str, name: str):
     This function shall find the house if its a relevant post
     """
     patternlist = {
-        'ravenlclaw': [
+        'ravenclaw': [
             'ravenclaw',
             r'raven[\w]+w',
             r'r[\w]+claw'
@@ -182,7 +182,7 @@ def detectHouse(content: str, name: str):
             match = re.search(pattern, str(content), re.IGNORECASE)
 
             if match is not None:
-                house = match.group(1)
+                house = key
                 house = house.replace(' ', '')
                 house = house.lower()
                 found = True
