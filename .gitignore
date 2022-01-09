@@ -3,3 +3,4 @@ __pycache__/
 db.csv
 error.txt
 hp_classes.json
+test_data/extracted_db.json
