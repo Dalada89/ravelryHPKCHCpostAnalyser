@@ -1,48 +1,27 @@
-import json
-import mysql.connector
-
-tables = {
-    "posts": "presented_projects",
-    "classes": "classes"
-}
+import database.general as general
 
 
-def connect_to_database():
-    """
-    Initialise the connection to the database
-    """
-
-    with open('credentials.json', 'r') as file:
-        credentials = json.load(file)
-
-    mydb = mysql.connector.connect(
-        host=credentials['database']['host'],
-        database=credentials['database']['database'],
-        user=credentials['database']['user'],
-        password=credentials['database']['password']
-    )
-
-    return mydb
+tables = general.tables
 
 
-def store_posts(list_of_posts):
+def store(list_of_posts):
     """
     Stores the posts in the database. If the post is already stored, the database will be updated.
     If it is a new post, it will be inserted into the database.
     """
 
-    mydb = connect_to_database()
+    mydb = general.connect_to_database()
     mycursor = mydb.cursor()
     inc = {
         'new': 0,
         'updated': 0
     }
     for post in list_of_posts:
-        if len(get_post(mycursor, post['class_id'], post['post_id'])) == 0:
-            insert_post(mycursor, post)
+        if len(get_one(mycursor, post['class_id'], post['post_id'])) == 0:
+            insert(mycursor, post)
             inc['new'] += 1
         else:
-            update_post(mycursor, post)
+            update(mycursor, post)
             inc['updated'] += 1
 
     mydb.commit()
@@ -50,7 +29,7 @@ def store_posts(list_of_posts):
     print(str(inc['new']) + "record inserted and " + str(inc['updated']) + " updated.")
 
 
-def insert_post(mycursor, data):
+def insert(mycursor, data):
     """
     Insert a post to the database
     """
@@ -70,7 +49,7 @@ def insert_post(mycursor, data):
     mycursor.execute(sql, val)
 
 
-def update_post(mycursor, data):
+def update(mycursor, data):
     """
     Updates a post to the database
     """
@@ -89,7 +68,7 @@ def update_post(mycursor, data):
     mycursor.execute(sql, val)
 
 
-def get_post(mycursor, class_id, post_id):
+def get_one(mycursor, class_id, post_id) -> list:
     """
     Reads a single post from the database
     """
@@ -118,10 +97,10 @@ def get_post(mycursor, class_id, post_id):
     return list_of_posts
 
 
-def read_posts(list_class_ids, start_date, end_date):
+def get_multi(list_class_ids, start_date, end_date) -> list:
     """
     """
-    mydb = connect_to_database()
+    mydb = general.connect_to_database()
     mycursor = mydb.cursor()
 
     list_of_posts = []
