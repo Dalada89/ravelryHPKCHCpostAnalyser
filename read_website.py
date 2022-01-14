@@ -62,18 +62,11 @@ def analysePage(content, further_data):
         name = tempSoup.find_all(class_="login")[0].getText()
         # nameBody = re.findall('(?i)name:([a-zA-Z\d\s]+)house:', str(body))[0].replace(' ', '')
         try:
-            # nameBody = re.findall(r'(?i)name:?\s?([a-zA-Z\d]{2,40})[,.\s]', str(body))
-            # nameBody = nameBody[0].replace(' ', '')
-            housePattern = r":?(?:name)?[\s:-]*?" + name + r"[,.\s\n]*(?:house)?\s?[\s:-]*?([a-zA-Z\d]{2,11})[,.\s]"
-            # print(housePattern)
-            house = re.findall(housePattern, str(body), re.IGNORECASE)
-
-            house = house[0].replace(' ', '')
-            house = house.lower()
-            if house[-1] == 's' and len(house) > 3:
-                house = house[:-1]
-            if house not in listOfHouses:
-                errorLog("[PostID: " + str(id) + "] Unknown house: " + house + " from " + name, body)
+            house = detectHouse(body, name)
+            if house is None:
+                continue
+            elif house not in listOfHouses:
+                errorLog("[PostID: " + str(id) + "] Unknown house: " + str(house) + " from " + name, body)
                 continue
 
             # verb
@@ -144,6 +137,61 @@ def analysePage(content, further_data):
     return lst
 
 
+def detectHouse(content: str, name: str):
+    """
+    This function shall find the house if its a relevant post
+    """
+    patternlist = {
+        'ravenclaw': [
+            'ravenclaw',
+            r'raven[\w]+w',
+            r'r[\w]+claw'
+        ],
+        'gryffindor': [
+            'gryffindor',
+            r'gr[\w]+ndor',
+            r'gryf[\w]+r'
+        ],
+        'hufflepuff': [
+            'hufflepuff',
+            r'huff[\w]+f',
+            r'h[\w]+puff'
+        ],
+        'slytherin': [
+            'slytherin',
+            r'sly[\w]+n',
+            r's[\w]+erin'
+        ],
+        'nqfy': [
+            'nqfy'
+        ],
+        'sos': [
+            'sos'
+        ]
+    }
+
+    found = False
+    for key in patternlist:
+        if found:
+            break
+        for item in patternlist[key]:
+            if found:
+                break
+            pattern = name + r'[\w\s\W]{0,35}(' + item + 's?)'
+
+            match = re.search(pattern, str(content), re.IGNORECASE)
+
+            if match is not None:
+                house = key
+                house = house.replace(' ', '')
+                house = house.lower()
+                found = True
+    if not found:
+        house = None
+
+    return house
+
+
 def errorLog(msg, log):
     """
     msg: str, Information about the error
@@ -180,7 +228,7 @@ def interpretate_date(date_ravelry):
     # print("The Date is: " + date_str)
 
     date_date = datetime.datetime.strptime(date_str, '%d. %B %Y, %I:%M %p')
-    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always a offset of 6h.
+    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always an offset of 6h.
     # Propably it depends on the timezone ?!?!
     date_unix = int(date_date.timestamp()) + 6*60*60
 

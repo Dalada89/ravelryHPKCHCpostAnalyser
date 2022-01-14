@@ -3,14 +3,14 @@ import datetime
 from requests import Session
 from bs4 import BeautifulSoup as bs
 import read_website
-import database_functions as dbf
+import database.posts as dbposts
 import sendmail
 
 base_url = r'https://www.ravelry.com'
 group_url = r'/discuss/hp-knitting-crochet-house-cup'
 
 
-def get_posts():
+def analyse_game_pages():
     with open('credentials.json', 'r') as file:
         credentials = json.load(file)
 
@@ -71,7 +71,7 @@ def inform_user():
     for clss in class_pages:
         class_list.append(clss['id'])
 
-    posts = dbf.read_posts(class_list, start, end)
+    posts = dbposts.get_multi(class_list, start, end)
     results = []
     for clss in class_pages:
         element = {}
@@ -119,7 +119,7 @@ def get_time(diff_to_utc=0, day=0):
 
 
 def main():
-    # database = get_posts()
+    database = analyse_game_pages()
 
     # keys = database[0].keys()
     # with open('db.csv', 'w', newline='') as output_file:
@@ -127,7 +127,7 @@ def main():
     #     dict_writer.writeheader()
     #     dict_writer.writerows(database)
 
-    # dbf.store_posts(database)
+    dbposts.store(database)
 
     inform_user()
 
