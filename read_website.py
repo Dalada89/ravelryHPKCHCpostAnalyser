@@ -170,6 +170,16 @@ def detectHouse(content: str, name: str):
         ]
     }
 
+    name_variants = [name]
+    name_len = len(name)
+    for chr in range(len(name)):
+        ende = -1*(name_len-chr-1)
+        if ende != 0:
+            variant = name[0:chr] + name[ende:]
+        else:
+            variant = name[0:chr]
+        name_variants.append(variant)
+
     found = False
     for key in patternlist:
         if found:
@@ -178,15 +188,9 @@ def detectHouse(content: str, name: str):
             if found:
                 break
 
-            name_len = len(name)
-            for chr in range(len(name)):
+            for name_variant in name_variants:
                 if found:
                     break
-                ende = -1*(name_len-chr-1)
-                if ende != 0:
-                    name_variant = name[0:chr] + name[ende:]
-                else:
-                    name_variant = name[0:chr]
                 pattern = name_variant + r'[\w\s\W]{0,35}(' + item + 's?)'
 
                 match = re.search(pattern, str(content), re.IGNORECASE)
