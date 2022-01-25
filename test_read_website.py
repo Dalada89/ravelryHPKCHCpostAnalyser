@@ -56,6 +56,7 @@ class TestStringMethods(unittest.TestCase):
                 if entry['name'] == truth['name']:
                     # I really don't know why I have to add 6h to the date. When I get the page with python, it has always an offset of 6h.
                     # Propably it depends on the timezone ?!?!
+                    # The truth must be the real unixtimestamp calculated by an online converter
                     self.assertEqual(entry['date'], truth['date'] + 6*60*60)
                     self.assertEqual(type(entry['date']), int)
                     break
