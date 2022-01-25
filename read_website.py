@@ -177,15 +177,25 @@ def detectHouse(content: str, name: str):
         for item in patternlist[key]:
             if found:
                 break
-            pattern = name + r'[\w\s\W]{0,35}(' + item + 's?)'
 
-            match = re.search(pattern, str(content), re.IGNORECASE)
+            name_len = len(name)
+            for chr in range(len(name)):
+                if found:
+                    break
+                ende = -1*(name_len-chr-1)
+                if ende != 0:
+                    name_variant = name[0:chr] + name[ende:]
+                else:
+                    name_variant = name[0:chr]
+                pattern = name_variant + r'[\w\s\W]{0,35}(' + item + 's?)'
 
-            if match is not None:
-                house = key
-                house = house.replace(' ', '')
-                house = house.lower()
-                found = True
+                match = re.search(pattern, str(content), re.IGNORECASE)
+
+                if match is not None:
+                    house = key
+                    house = house.replace(' ', '')
+                    house = house.lower()
+                    found = True
     if not found:
         house = None
 
