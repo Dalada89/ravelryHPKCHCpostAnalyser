@@ -122,3 +122,27 @@ def update(course, mycursor=None):
         mydb.commit()
         mycursor.close()
         mydb.close()
+
+
+def delete(ravelry_id: int, mycursor=None):
+    """
+    Function to delete an entry
+    """
+
+    close_connection = False
+    if mycursor is None:
+        mydb = general.connect_to_database()
+        mycursor = mydb.cursor()
+        close_connection = True
+
+    sql = "DELETE FROM {table} WHERE ravelry_id = {id}"
+    sql = sql.format(table=table, id=ravelry_id)
+
+    mycursor.execute(sql)
+
+    if close_connection:
+        mydb.commit()
+        mycursor.close()
+        mydb.close()
+    
+    return True
