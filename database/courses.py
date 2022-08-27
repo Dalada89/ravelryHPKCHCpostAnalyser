@@ -56,7 +56,7 @@ def get(filter=None, mycursor=None):
         sqlfilter = sqlfilter[0:-5]
         sql = "SELECT * FROM {table} WHERE {filter};".format(table=table, filter=sqlfilter)
     else:
-        sql = "SELECT * FROM {table}".format(table=table)
+        sql = "SELECT * FROM {table};".format(table=table)
     mycursor.execute(sql)
 
     data = general.extract_data_from_curser(mycursor)
@@ -103,7 +103,7 @@ def update(course, mycursor=None):
         mycursor = mydb.cursor()
         close_connection = True
 
-    # id and ravelry_id should not been updated
+    # id and ravelry_id should not be updated
     course.pop('id')
     ravelry_id = course.pop('ravelry_id')
     
