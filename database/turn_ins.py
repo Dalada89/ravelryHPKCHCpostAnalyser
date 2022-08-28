@@ -25,6 +25,7 @@ def create_table():
             project VARCHAR(64), \
             verb VARCHAR(64), \
             points INTEGER, \
+            status VARCHAR(64), \
             UNIQUE KEY unique_ravelry_post (ravelry_id, post_id));"
 
     mycursor.execute(sql.format(table=table))
