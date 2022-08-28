@@ -6,3 +6,4 @@ hp_classes.json
 test_data/extracted_db.json
 .venv
 try_and_error_script.py
+add_trackers.json
