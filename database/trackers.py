@@ -16,7 +16,8 @@ def create_table():
 
     sql = "CREATE TABLE {table} ( \
             id INTEGER PRIMARY KEY AUTO_INCREMENT, \
-            name varchar(128) NOT NULL, \
+            name varchar(128) UNIQUE NOT NULL, \
+            nickname varchar(128) NOT NULL, \
             mail VARCHAR(256), \
             updated INTEGER);"
 
