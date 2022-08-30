@@ -1,3 +1,4 @@
+import datetime
 
 base_url = r'https://www.ravelry.com'
 group_url = r'/discuss/hp-knitting-crochet-house-cup'
@@ -26,6 +27,26 @@ def create_url(ravelry_id, post_id=None, pagegiven=None):
         url = url.format(s=s, e=e, p=post_id)
 
     return url
+
+
+def get_time_yesterday(diff_to_utc=0, day=0):
+    """
+    get timestamp for yesterday in defined timezone
+    """
+    if day == 0:
+        day = datetime.datetime.today() - datetime.timedelta(days=1)
+    else:
+        # prüfen was day ist..
+        day = day
+
+    start = datetime.datetime(day.year, day.month, day.day, 0, 0, 0) \
+        - datetime.timedelta(hours=diff_to_utc)  # .timestamp()
+    start_unix = int(start.timestamp())
+    end = datetime.datetime(day.year, day.month, day.day, 23, 59, 59) \
+        - datetime.timedelta(hours=diff_to_utc)
+    end_unix = int(end.timestamp())
+    # print(str(start_unix) + " to " + str(end_unix))
+    return start_unix, end_unix, day
 
 
 def test():
