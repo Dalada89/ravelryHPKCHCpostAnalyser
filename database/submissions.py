@@ -2,7 +2,7 @@ import warnings
 from database import general
 
 
-table = 'turn_ins'
+table = 'submissions'
 
 
 def create_table():
@@ -97,9 +97,9 @@ def get(filter=None, mycursor=None, start=None, end=None):
     return data
 
 
-def insert(turn_in, mycursor=None):
+def insert(submission, mycursor=None):
     """
-    This function shall insert a class into the database
+    This function shall insert a submission into the database
     """
     close_connection = False
     if mycursor is None:
@@ -107,13 +107,13 @@ def insert(turn_in, mycursor=None):
         mycursor = mydb.cursor()
         close_connection = True
 
-    if 'id' in turn_in:
-        turn_in.pop('id')
+    if 'id' in submission:
+        submission.pop('id')
 
-    placeholder = ", ".join(["%s"] * len(turn_in))
-    sql = "INSERT INTO `{table}` ({columns}) VALUES ({values});".format(table=table, columns=",".join(turn_in.keys()),
+    placeholder = ", ".join(["%s"] * len(submission))
+    sql = "INSERT INTO `{table}` ({columns}) VALUES ({values});".format(table=table, columns=",".join(submission.keys()),
                                                                         values=placeholder)
-    mycursor.execute(sql, list(turn_in.values()))
+    mycursor.execute(sql, list(submission.values()))
 
     if close_connection:
         mydb.commit()
@@ -121,9 +121,9 @@ def insert(turn_in, mycursor=None):
         mydb.close()
 
 
-def update(turn_in, mycursor=None):
+def update(submission, mycursor=None):
     """
-    Function to update an existing clusters in the database
+    Function to update an existing submissions in the database
     """
     close_connection = False
     if mycursor is None:
@@ -132,14 +132,14 @@ def update(turn_in, mycursor=None):
         close_connection = True
 
     # id should not be updated
-    id = turn_in.pop('id')
+    id = submission.pop('id')
     
     varset = ''
-    for key in turn_in:
-        if type(turn_in[key]) in [int, float]:
-            varset += '{key}={val}, '.format(key=key, val=turn_in[key])
+    for key in submission:
+        if type(submission[key]) in [int, float]:
+            varset += '{key}={val}, '.format(key=key, val=submission[key])
         else:
-            varset += "{key}='{val}', ".format(key=key, val=turn_in[key])
+            varset += "{key}='{val}', ".format(key=key, val=submission[key])
     varset = varset[0:-2]
 
     sql = "UPDATE {table} SET {set} WHERE id='{id}';".format(table=table, set=varset, id=id)
