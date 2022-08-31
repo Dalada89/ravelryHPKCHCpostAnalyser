@@ -1,4 +1,5 @@
 import datetime
+from pytz import timezone
 
 base_url = r'https://www.ravelry.com'
 group_url = r'/discuss/hp-knitting-crochet-house-cup'
@@ -49,7 +50,23 @@ def get_time_yesterday(diff_to_utc=0, day=0):
     return start_unix, end_unix, day
 
 
+def tz_diff(date: datetime, target: str, home: str) -> int:
+    """
+    Returns the difference in hours between timezone1 and timezone2
+    for a given date.
+    """
+    tz1 = timezone(target)
+    tz2 = timezone(home)
+
+    diff = (tz1.localize(date) - tz2.localize(date).astimezone(tz1))\
+            .seconds/3600
+    return int(diff)
+
+
 def test():
+    date = datetime.datetime.now()
+    dif = tz_diff(date, 'America/Los_Angeles', 'Europe/Berlin')
+    print(dif)
     url = create_url(4256123)
     print(url)
 
