@@ -25,7 +25,9 @@ def create_table():
             title VARCHAR(256), \
             term VARCHAR(32), \
             month VARCHAR(32), \
-            active INTEGER, \
+            start INTEGER, \
+            end INTEGER, \
+            mode INTEGER, \
             tracked_by VARCHAR(128), \
             type VARCHAR(32), \
             base_points INTEGER, \
