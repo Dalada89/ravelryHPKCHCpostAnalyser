@@ -21,7 +21,7 @@ def main():
     mycursor.close()
     mydb.close()
 
-    inform_users.inform_user()
+    inform_users.inform_user(class_pages)
 
 
 if __name__ == '__main__':
