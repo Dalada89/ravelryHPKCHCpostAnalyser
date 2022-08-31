@@ -1,101 +1,101 @@
 [
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 151,
         "name": "mUsic",
         "date": 1633039080,
         "project": "thing",
         "house": "ravenclaw",
-        "loved": 2,
         "verb": "knitted",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#151"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 152,
         "name": "luvwool",
         "date": 1633044540,
         "project": "thing",
         "house": "hufflepuff",
-        "loved": 6,
         "verb": "knitted",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#152"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 153,
         "name": "plusee",
         "date": 1633059780,
         "project": "thing",
         "house": "slytherin",
-        "loved": 0,
         "verb": "made",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#153"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 154,
         "name": "WantTee",
         "date": 1633129860,
         "project": "socks",
         "house": "gryffindor",
-        "loved": 7,
         "verb": "made",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#154"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 156,
         "name": "matilde",
         "date": 1633166040,
         "project": "thing",
         "house": "slytherin",
-        "loved": 0,
         "verb": "made",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#156"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 157,
         "name": "nemoxela",
         "date": 1633181280,
         "project": "thing",
         "house": "hufflepuff",
-        "loved": 3,
         "verb": "made",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#157"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 158,
         "name": "tideUpNation",
         "date": 1633185120,
         "project": "thing",
         "house": "slytherin",
-        "loved": 1,
         "verb": "knitted",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#158"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 160,
         "name": "PaticiaA",
         "date": 1633188660,
         "project": "thing",
         "house": "hufflepuff",
-        "loved": 2,
         "verb": "made",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#160"
+        "points": 0,
+        "status": "presented"
     },
     {
-        "class_id": 4153080,
+        "ravelry_id": 4153080,
         "post_id": 167,
         "name": "junigrat",
         "date": 1633198980,
         "project": "thing",
         "house": "slytherin",
-        "loved": 0,
         "verb": "made",
-        "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4153080/151-175#167"
+        "points": 0,
+        "status": "presented"
     }
 ]

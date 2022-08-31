@@ -42,6 +42,8 @@ def analysePage(content, further_data):
         tempSoup = BeautifulSoup(str(post), 'html.parser')
         try:
             id = int(tempSoup.find_all(class_="post_number")[0].getText())
+            if id < further_data['last_post']:
+                continue
             allPostId.append(id)
         except IndexError:
             try:
@@ -116,25 +118,20 @@ def analysePage(content, further_data):
             love = 0
         # print(date)
         dct = {
-            'class_id': int(further_data['class_id']),
+            'ravelry_id': int(further_data['ravelry_id']),
             'post_id': int(id),
             'name': name,
+            'house': house,
             'date': date_unix,
             'project': project,
-            'house': house,
-            'loved': love,
             'verb': verb,
-            'url': further_data['url'] + '#' + str(id)}
+            'points': 0,
+            'status': 'presented'}
         # a dd new row to end of DataFrame
         lst.append(dct)
-        # print(id + ": " + name)
-    # df = pd.DataFrame(lst)
-    # print(df)
-    # if options['endPost'] > -1:
-    #     selPost = df[(df.id >= options['startPost'] & df.id <= options['endPost'])]
-    # else:
-    #     selPost = df[(df.id >= options['startPost'])]
-    return lst
+
+    # id is the last post
+    return lst, id
 
 
 def detectHouse(content: str, name: str):
