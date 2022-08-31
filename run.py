@@ -5,7 +5,7 @@ from report import inform_users
 
 
 def main():
-    class_pages = courses.get(filter={'active': 1})
+    class_pages = courses.get(filter={'mode': 1})
     database = course_pages.analyse_game_pages(class_pages)
 
     mydb = general.connect_to_database()

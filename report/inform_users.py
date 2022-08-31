@@ -90,7 +90,7 @@ def create_text(name, results):
 
 
 def test():
-    class_pages = courses.get(filter={'active': 1})
+    class_pages = courses.get(filter={'mode': 1})
     inform_user(class_pages)
 
 
