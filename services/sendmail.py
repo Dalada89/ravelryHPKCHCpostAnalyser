@@ -11,7 +11,7 @@ def send(receiver_email, text, html):
     credentials = credentials['mail']
 
     # Create a secure SSL context
-    context = ssl.create_default_context()
+    context = ssl._create_unverified_context()
 
     message = MIMEMultipart("alternative")
     message["Subject"] = "[HPKCHC] Stats"
