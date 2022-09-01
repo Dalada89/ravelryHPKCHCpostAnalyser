@@ -18,6 +18,8 @@ def inform_user(class_pages):
     data = {}
 
     for clss in class_pages:
+        if clss['tracked_by'] == '':
+            continue
         if clss['tracked_by'].lower() not in data:
             data[clss['tracked_by'].lower()] = []
         
