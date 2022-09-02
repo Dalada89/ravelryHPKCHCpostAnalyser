@@ -21,6 +21,8 @@ def main():
     mycursor.close()
     mydb.close()
 
+    # ravelry_id was popped
+    class_pages = courses.get(filter={'mode': 1})
     inform_users.inform_user(class_pages)
 
 
