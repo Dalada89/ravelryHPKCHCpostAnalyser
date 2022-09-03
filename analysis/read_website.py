@@ -37,6 +37,7 @@ def analysePage(content, further_data):
     posts = soup.find_all(class_="forum_post_row")
     allPostId = []
     lst = []
+    id = further_data['last_post']
     for post in posts:
         # Post ID
         tempSoup = BeautifulSoup(str(post), 'html.parser')
