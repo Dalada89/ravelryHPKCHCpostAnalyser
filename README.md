@@ -2,7 +2,7 @@
 
 ## General
 
-This python tool is written to analyse a forum page on ravelry and all submitted projects will be extracted. The saved content from the post is shonw below:
+This python tool is written to analyse a forum page on ravelry and all submitted projects will be extracted. The saved content from the post is shown below:
 
 1. The user name
 2. the course id,
