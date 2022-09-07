@@ -5,42 +5,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
-def create_text(name, results):
-    # Create the plain-text and HTML version of your message
-    text = "Hi " + str(name) + ",\n"
-    html = "<html><body><p>Hi " + str(name) + ",<br>"
-    text = text + "here are your daily ravelry results:\n\n"
-    html = html + "here are your daily ravelry results:<br><br>"
-
-    for res in results:
-        text = text + str(res['day'].day) + "." + str(res['day'].month) + "." + str(res['day'].year) + " - " + str(res['class']['name']) + ":\n"
-        html += "<h2>" + str(res['day'].day) + "." + str(res['day'].month) + "." + str(res['day'].year)  \
-            + " - " + str(res['class']['name']) + "</h2><br>"
-        html += "<ol><li>Ranking:<ul>"
-        for key in res['houses']:
-            text += key + ": " + str(res['houses'][key]) + "\n"
-            html += "<li>" + key + ": " + str(res['houses'][key]) + "</li>"
-        html += "</ul><li>Posts:<ul>"
-        for post in res['posts']:
-            html += "<li>" + '<a href="' + post['url'] + '">' + str(post['post_id']) + '</a> - ' \
-                + post['name'] + ' (<em>' + str(post['house']) + '</em>),</li>'
-        html += "</ul></li></ol>"
-        text = text + "\n"
-        html = html + "<br>"
-
-    text = text + "\n" + "Bye"
-    html = html + "<br>" + "Bye</p></body></html>"
-
-    return text, html
-
-
 def send(receiver_email, text, html):
     with open('credentials.json', 'r') as file:
         credentials = json.load(file)
     credentials = credentials['mail']
 
     # Create a secure SSL context
-    context = ssl.create_default_context()
+    context = ssl._create_unverified_context()
 
     message = MIMEMultipart("alternative")
     message["Subject"] = "[HPKCHC] Stats"

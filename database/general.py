@@ -23,3 +23,16 @@ def connect_to_database():
     )
 
     return mydb
+
+
+def extract_data_from_curser(mycursor):
+    results = []
+    columns = [column[0] for column in mycursor.description]
+    myresults = mycursor.fetchall()
+    for row in myresults:
+        element_dict = {}
+        for index, element in enumerate(row):
+            element_dict[columns[index]] = element
+        results.append(element_dict)
+
+    return results
