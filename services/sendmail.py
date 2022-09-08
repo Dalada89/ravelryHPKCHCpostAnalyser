@@ -31,7 +31,8 @@ def send(receiver_email, text, html):
         server.login(credentials['login'], credentials['password'])
         server.sendmail(credentials['email'], receiver_email, message.as_string())
 
-    print("Mail sent.")
+    msg = 'Mail sent to {to}.'.format(to=receiver_email)
+    print(msg)
 
 
 def main():

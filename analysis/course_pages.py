@@ -33,12 +33,11 @@ def analyse_game_pages(class_pages):
             soup = bs(site.content, 'html.parser')
             count_pages_soup = soup.find_all(class_='page_bar__page')
             count_pages = 1
+            submissons = 0
+            first_post = page['last_post']
             if len(count_pages_soup) != 0:
                 count_pages = int(count_pages_soup[-1].getText())
-                print(page['title'] + ' hat ' + count_pages_soup[-1].getText() + ' Seiten.')
-            else:
-                print(page['title'] + ' hat eine Seite.')
-            for i in range(0, count_pages - start_page): ########## Hier stimmt noch was nicht WEITER MACHEN
+            for i in range(0, count_pages - start_page):
                 if i == 0:
                     pageside = int(page['last_post']/25) + 1
                     start_with_post = page['last_post'] + 1
@@ -51,14 +50,16 @@ def analyse_game_pages(class_pages):
                     'url': url,
                     'last_post': start_with_post
                 }
-                # print(further_data)
                 site = s.get(url)
                 result, last_post = read_website.analysePage(site.content, further_data)
+                submissons += len(result)
                 database.extend(result)
                 page['last_post'] = int(last_post)
             courses.update(page)
-                # print(base_url + group_url + r'/' + page['id'] + '/' + str(i*25+1) + '-' + str(i*25+25))
-        # run program
+            analysed_posts = page['last_post'] - first_post
+            msg = 'Course {title} has {nPost} new posts with {sm} submissions.'
+            msg = msg.format(title=page['title'], nPost=analysed_posts, sm=submissons)
+            print(msg)
 
         s.post(cf.base_url + r'/account/logout', {'authenticity_token': token})
 
