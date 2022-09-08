@@ -8,3 +8,4 @@ test_data/extracted_db.json
 try_and_error_script.py
 add_trackers.json
 add_courses.json
+report/paths.json
