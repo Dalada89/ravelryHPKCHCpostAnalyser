@@ -29,9 +29,9 @@ def prepare_path(course):
     for char in replace_chars:
         name = name.replace(char, replace_chars[char])
 
-    path = Path(PurePath(paths['report'][course['type']]).joinpath(name))
+    path = Path(PurePath(paths['report'][course['type']]).joinpath(course['term'], name))
     if not path.is_dir():
-        path.mkdir()
+        path.mkdir(parents=True)
 
     return path
 
