@@ -2,3 +2,5 @@ bs4
 mysql-connector
 requests
 pytz
+matplotlib
+pandas
