@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 
 base_url = r'https://www.ravelry.com'
@@ -35,16 +35,16 @@ def get_time_yesterday(diff_to_utc=0, day=0):
     get timestamp for yesterday in defined timezone
     """
     if day == 0:
-        day = datetime.datetime.today() - datetime.timedelta(days=1)
+        day = datetime.today() - timedelta(days=1)
     else:
         # prüfen was day ist..
         day = day
 
-    start = datetime.datetime(day.year, day.month, day.day, 0, 0, 0) \
-        - datetime.timedelta(hours=diff_to_utc)  # .timestamp()
+    start = datetime(day.year, day.month, day.day, 0, 0, 0) \
+        - timedelta(hours=diff_to_utc)  # .timestamp()
     start_unix = int(start.timestamp())
-    end = datetime.datetime(day.year, day.month, day.day, 23, 59, 59) \
-        - datetime.timedelta(hours=diff_to_utc)
+    end = datetime(day.year, day.month, day.day, 23, 59, 59) \
+        - timedelta(hours=diff_to_utc)
     end_unix = int(end.timestamp())
     # print(str(start_unix) + " to " + str(end_unix))
     return start_unix, end_unix, day
@@ -61,6 +61,25 @@ def tz_diff(date: datetime, target: str, home: str) -> int:
     diff = (tz1.localize(date) - tz2.localize(date).astimezone(tz1))\
             .seconds/3600  # noqa: E127
     return int(diff)
+
+
+def get_last_date_of_month(year, month):
+    """
+    Return the last date of the month.
+    Args:
+        year (int): Year, i.e. 2022
+        month (int): Month, i.e. 1 for January
+
+    Returns:
+        date (datetime): Last date of the current month
+    """
+
+    if month == 12:
+        last_date = datetime(year, month, 31)
+    else:
+        last_date = datetime(year, month + 1, 1) + timedelta(days=-1)
+
+    return last_date
 
 
 def test():
