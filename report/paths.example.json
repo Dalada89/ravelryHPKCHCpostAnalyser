@@ -1,5 +1,5 @@
 {
     "report": {
-        "classes": "~/path/to/class/report/folder/"
+        "class": "~/path/to/class/report/folder/"
     }
 }
