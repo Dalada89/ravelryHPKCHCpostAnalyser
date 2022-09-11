@@ -98,6 +98,8 @@ def report_classes():
             fileobj.write(report)
         nxc.upload_file(nxc.temp_dir.joinpath(filename), directory, del_file=True)
 
+        print('Uploaded class report to nextcloud tracking.')
+
 
 def create_reports():
     """
