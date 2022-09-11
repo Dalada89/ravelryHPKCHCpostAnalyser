@@ -2,9 +2,11 @@ from pathlib import PurePath
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 from datetime import datetime
+import pytz
 import pandas as pd
 import json
 import common_functions as cf
+from services import nxc
 
 
 with open('listOfHouses.json', 'r') as fileobj:
@@ -30,7 +32,8 @@ def plot_timeline(data, course, savedir):
     prepared = []
     cur_day = 1
     for item in data:
-        day = datetime.fromtimestamp(item['date']).day
+        date = datetime.fromtimestamp(item['date']).astimezone(pytz.timezone('UTC'))
+        day = date.day
         if day > cur_day:
             el = {}
             el['day'] = cur_day
@@ -56,4 +59,6 @@ def plot_timeline(data, course, savedir):
     ax.set_xticks([1, 7, 14, 21, 28, last_day.day])
     ax.set_title(course['title'])
     savedir = PurePath(savedir)
-    plt.savefig(savedir.joinpath('timeline.png'), dpi=300)
+    filename = 'timeline.png'
+    plt.savefig(nxc.temp_dir.joinpath(filename), dpi=300)
+    nxc.upload_file(nxc.temp_dir.joinpath(filename), savedir.joinpath(filename), del_file=True)

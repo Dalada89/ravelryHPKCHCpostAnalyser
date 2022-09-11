@@ -1,14 +1,16 @@
 import json
 from datetime import datetime
+import pytz
 from pathlib import Path, PurePath
 import sys
 sys.path.insert(0, str(Path.cwd()))
+from services import nxc  # noqa: E402
 from database import submissions, courses  # noqa: E402
 import common_functions as cf  # noqa: E402
 from report import diagrams  # noqa: E402
 
 
-date_pattern = '%B %-d, %Y %H:%M UTC'
+date_pattern = '%b %-d, %Y %H:%M UTC'
 with open('listOfHouses.json', 'r') as file:
     listOfHouses = json.load(file)
 
@@ -30,8 +32,9 @@ def prepare_path(course):
         name = name.replace(char, replace_chars[char])
 
     path = Path(PurePath(paths['report'][course['type']]).joinpath(course['term'], name))
-    if not path.is_dir():
-        path.mkdir(parents=True)
+    nxc.make_dir(path)
+    # if not path.is_dir():
+    #     path.mkdir(parents=True)
 
     return path
 
@@ -48,7 +51,7 @@ def report_classes():
         diagrams.plot_timeline(data, aclass, directory)
 
         report = '# {title}\n\n'.format(title=aclass['title'])
-        now = datetime.now()
+        now = datetime.now().astimezone(pytz.timezone('UTC'))
         report += 'Updated: {now}\n\n'.format(now=now.strftime(date_pattern))
         url_first_page = cf.create_url(aclass['ravelry_id'])
         url_last_page = cf.create_url(aclass['ravelry_id'], post_id=aclass['last_post'])
@@ -64,7 +67,7 @@ def report_classes():
         data = sorted(data, key=lambda item: item['date'])
         cur_day = 0
         for idx, row in enumerate(data):
-            date = datetime.fromtimestamp(row['date'])
+            date = datetime.fromtimestamp(row['date']).astimezone(pytz.timezone('UTC'))
             if date.day > cur_day:
                 cur_day = date.day
                 report += '| | |**{date}**| | |\n'.format(date=date.strftime('%B %-d, %Y'))
@@ -82,15 +85,18 @@ def report_classes():
             report += '|No.|Name|Post|Date|\n'
             report += '|---|----|----|----|\n'
             for idx, row in enumerate(filt):
-                date = datetime.fromtimestamp(row['date'])
+                date = datetime.fromtimestamp(row['date']).astimezone(pytz.timezone('UTC'))
                 url = cf.create_url(row['ravelry_id'], post_id=row['post_id'])
                 report += '|{i}|{n}|[{pi}]({u})|{d}|\n'.format(i=idx+1, n=row['name'],
                                                                pi=row['post_id'],
                                                                u=url, d=date.strftime(date_pattern))
 
-        directory = directory.joinpath('readme.md')
-        with open(directory, 'w') as fileobj:
+        filename = 'report.md'
+        directory = directory.joinpath(filename)
+
+        with open(nxc.temp_dir.joinpath(filename), 'w') as fileobj:
             fileobj.write(report)
+        nxc.upload_file(nxc.temp_dir.joinpath(filename), directory, del_file=True)
 
 
 def create_reports():
