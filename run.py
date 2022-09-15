@@ -1,7 +1,7 @@
 import mysql.connector
 from database import submissions, courses, general
 from analysis import course_pages
-from report import inform_users
+from report import inform_users, nextcloud_report
 
 
 def main():
@@ -24,6 +24,7 @@ def main():
     # ravelry_id was popped
     class_pages = courses.get(filter={'mode': 1})
     inform_users.inform_user(class_pages)
+    nextcloud_report.create_reports()
 
 
 if __name__ == '__main__':
