@@ -4,17 +4,11 @@ import re
 from bs4 import BeautifulSoup
 import datetime
 import custom_error as ce
-# import math
-# from dateutil import parser, tz
-# from datetime import datetime
-# import pytz
-# import operator
-# import os
 with open('listOfHouses.json', 'r') as file:
     listOfHouses = json.load(file)
 
 
-def analysePage(content, further_data):
+def analysePage(soup, further_data):
     """
     This function analyses the page and stores all found projects into a pandas dataframe
 
@@ -23,16 +17,6 @@ def analysePage(content, further_data):
     """
     with open("categories.json", 'r') as file:
         categories = json.load(file)
-
-    # df = pd.DataFrame({
-    #     'id': [],
-    #     'name': [],
-    #     'date': [],
-    #     'project': [],
-    #     'house': [],
-    #     'love': []})
-
-    soup = BeautifulSoup(content, 'html.parser')
 
     posts = soup.find_all(class_="forum_post_row")
     allPostId = []
@@ -57,7 +41,8 @@ def analysePage(content, further_data):
                     # print("found deleted post")
                     continue
             except IndexError:
-                errorLog("I can't interpretate this post. Something is wrong with it. I pushed in an error.txt file!", post)
+                msg = "I can't interpretate this post. Something is wrong with it. I pushed in an error.txt file!"
+                errorLog(msg, post)
                 continue
         # Body
         tempSoup = BeautifulSoup(str(post), 'html.parser')
@@ -214,7 +199,8 @@ def errorLog(msg, log):
 
     return None
     """
-    logEntry = msg + ':\n' + str(log) + '\n ________________________________________________________________________________________________\n'
+    logEntry = msg + ':\n' + str(log) + '\n ______________________________________________________________' + \
+                                        '__________________________________\n'
     with open('error.txt', 'a') as f:
         f.write(logEntry)
     print(msg)
@@ -240,7 +226,8 @@ def interpretate_date(date_ravelry):
     # print("The Date is: " + date_str)
 
     date_date = datetime.datetime.strptime(date_str, '%d. %B %Y, %I:%M %p')
-    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always an offset of 6h.
+    # I really don't know why I have to add 6h to the date. When I get the page with python,
+    # it has always an offset of 6h.
     # Propably it depends on the timezone ?!?!
     date_unix = int(date_date.timestamp()) + 6*60*60
 
