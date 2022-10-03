@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import sys
 cwd = str(Path.cwd())
@@ -24,9 +25,7 @@ def create_table():
             ravelry_id INTEGER UNIQUE NOT NULL, \
             title VARCHAR(256), \
             term VARCHAR(32), \
-            month VARCHAR(32), \
-            start INTEGER, \
-            end INTEGER, \
+            active json, \
             mode INTEGER, \
             tracked_by VARCHAR(128), \
             type VARCHAR(32), \
@@ -47,7 +46,7 @@ def get(filter=None, mycursor=None):
         mydb = general.connect_to_database()
         mycursor = mydb.cursor()
         close_connection = True
-    
+
     if filter is not None:
         sqlfilter = ''
         for key in filter:
@@ -63,11 +62,14 @@ def get(filter=None, mycursor=None):
 
     data = general.extract_data_from_curser(mycursor)
 
+    for course in data:
+        course['active'] = json.loads(course['active'])
+
     if close_connection:
         mydb.commit()
         mycursor.close()
         mydb.close()
-    
+
     return data
 
 
@@ -83,6 +85,8 @@ def insert(course, mycursor=None):
 
     if 'id' in course:
         course.pop('id')
+
+    course['active'] = json.dumps(course['active'])
 
     placeholder = ", ".join(["%s"] * len(course))
     sql = "INSERT INTO `{table}` ({columns}) VALUES ({values});".format(table=table, columns=",".join(course.keys()),
@@ -108,7 +112,8 @@ def update(course, mycursor=None):
     # id and ravelry_id should not be updated
     course.pop('id')
     ravelry_id = course.pop('ravelry_id')
-    
+    course['active'] = json.dumps(course['active'])
+
     varset = ''
     for key in course:
         if type(course[key]) in [int, float]:
@@ -124,6 +129,8 @@ def update(course, mycursor=None):
         mydb.commit()
         mycursor.close()
         mydb.close()
+
+    course['ravelry_id'] = ravelry_id
 
 
 def delete(ravelry_id: int, mycursor=None):
@@ -146,5 +153,5 @@ def delete(ravelry_id: int, mycursor=None):
         mydb.commit()
         mycursor.close()
         mydb.close()
-    
+
     return True
