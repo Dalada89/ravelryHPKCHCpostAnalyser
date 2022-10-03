@@ -33,6 +33,7 @@ def get_session():
         home_page = session.get(cf.base_url)
         bs_content = bs(home_page.content, 'html.parser')
         token = bs_content.find('meta', {'name': 'authenticity-token'})['content']
+        print('logged into ravelry')
 
 
 def logout():
@@ -57,12 +58,29 @@ def get_page(url):
     return soup
 
 
-def main():
-    url = 'https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4215220/76-100'
-    site = get_page(url)
+def get_title(url, out=True):
+    soup = get_page(url)
 
-    print(site)
+    item = soup.find_all(class_="topic_heading rsp_hidden")
+    if item != []:
+        title = item[0].getText()
+        title = title.rstrip()
+    else:
+        title = None
+
+    if out:
+        logout()
+
+    return title
+
+
+def main():
+    url = 'https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4215918/1-25'
+    site = get_title(url)
+
+    print('>' + site + '<')
 
 
 if __name__ == '__main__':
+    logout()
     main()
