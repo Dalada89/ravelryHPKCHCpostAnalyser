@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path.cwd()))
-from database import courses, trackers, submissions
+from database import courses, trackers, submissions  # noqa: E402
 
 
 def initialise():
