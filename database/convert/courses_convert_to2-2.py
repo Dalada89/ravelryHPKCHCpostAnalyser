@@ -60,6 +60,7 @@ def convert_data(data):
         el['active'] = [
             [el.pop('start'), el.pop('end')]
         ]
+        el['type'] = el['type'].lower()
 
     return data
 
