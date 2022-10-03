@@ -3,9 +3,9 @@ from pathlib import Path
 import sys
 import json
 sys.path.insert(0, str(Path.cwd()))
-from database import trackers, courses, submissions
-from services import sendmail
-import common_functions as cf
+from database import trackers, courses, submissions  # noqa: E402
+from services import sendmail  # noqa: E402
+import common_functions as cf  # noqa: E402
 
 
 def inform_user(class_pages):
@@ -22,7 +22,7 @@ def inform_user(class_pages):
             continue
         if clss['tracked_by'].lower() not in data:
             data[clss['tracked_by'].lower()] = []
-        
+
         filter = {
             'ravelry_id': clss['ravelry_id']
         }
@@ -35,7 +35,7 @@ def inform_user(class_pages):
             'day': day,
             'ranking': {}
         }
-        
+
         for house in listOfHouses:
             element['ranking'][house] = 0
 
@@ -76,7 +76,7 @@ def create_text(name, results):
             html += "<li>{house}: {n}</li>".format(house=key, n=res['ranking'][key])
         html += "</ul><li>Posts:<ul>"
         for post in res['posts']:
-            url = cf.create_url(post['ravelry_id'],post_id=post['post_id'])
+            url = cf.create_url(post['ravelry_id'], post_id=post['post_id'])
             html += '<li><a href="{url}">{pid}</a> - {name} (<em>{house}</em>),</li>'.format(url=url,
                                                                                              pid=post['post_id'],
                                                                                              name=post['name'],
