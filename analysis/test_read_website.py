@@ -2,6 +2,7 @@ from pathlib import Path
 import sys
 import unittest
 import json
+from bs4 import BeautifulSoup as bs
 sys.path.insert(0, str(Path.cwd()))
 from analysis import read_website as rw  # noqa: E402
 
@@ -11,7 +12,8 @@ class TestStringMethods(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         with open(Path('./test_data/test_side_error.html'), 'r', encoding='utf-8') as html:
-            cls.webpage = html.read()
+            soup = bs(html.read(), 'html.parser')
+            cls.webpage = soup
         with open(Path('./test_data/db.json'), 'r') as jsonfile:
             cls.truths = json.load(jsonfile)
         cls.further_data = {
@@ -57,7 +59,8 @@ class TestStringMethods(unittest.TestCase):
         for entry in self.extracted:
             for truth in self.truths:
                 if entry['name'] == truth['name']:
-                    # I really don't know why I have to add 6h to the date. When I get the page with python, it has always an offset of 6h.
+                    # I really don't know why I have to add 6h to the date.
+                    # When I get the page with python, it has always an offset of 6h.
                     # Propably it depends on the timezone ?!?!
                     # The truth must be the real unixtimestamp calculated by an online converter
                     self.assertEqual(entry['date'], truth['date'] + 6*60*60)
