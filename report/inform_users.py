@@ -18,31 +18,34 @@ def inform_user(class_pages):
     data = {}
 
     for clss in class_pages:
-        if clss['tracked_by'] == '':
-            continue
-        if clss['tracked_by'].lower() not in data:
-            data[clss['tracked_by'].lower()] = []
+        tracked_by = clss['tracked_by'].split(';')
 
-        filter = {
-            'ravelry_id': clss['ravelry_id']
-        }
-        posts = submissions.get(filter=filter, start=start, end=end)
-        posts = sorted(posts, key=lambda x: x['post_id'])
+        for truker in tracked_by:
+            if truker == '':
+                continue
+            if truker.lower() not in data:
+                data[truker.lower()] = []
 
-        element = {
-            'title': clss['title'],
-            'posts': posts,
-            'day': day,
-            'ranking': {}
-        }
+            filter = {
+                'ravelry_id': clss['ravelry_id']
+            }
+            posts = submissions.get(filter=filter, start=start, end=end)
+            posts = sorted(posts, key=lambda x: x['post_id'])
 
-        for house in listOfHouses:
-            element['ranking'][house] = 0
+            element = {
+                'title': clss['title'],
+                'posts': posts,
+                'day': day,
+                'ranking': {}
+            }
 
-        for post in posts:
-            element['ranking'][post['house']] += 1
+            for house in listOfHouses:
+                element['ranking'][house] = 0
 
-        data[clss['tracked_by'].lower()].append(element)
+            for post in posts:
+                element['ranking'][post['house']] += 1
+
+            data[truker.lower()].append(element)
 
     for key in data:
         tracker = trackers.get(filter={'nickname': key})
@@ -85,7 +88,7 @@ def create_text(name, results):
         text += "\n"
         html += "<br>"
 
-    text += "\n Bye\n Your Ravenclaw Tracker"
+    text += "\nBye\nYour Ravenclaw Tracker"
     html += "<br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
 
     return text, html
