@@ -3,15 +3,13 @@ from pathlib import Path
 import sys
 import json
 sys.path.insert(0, str(Path.cwd()))
-from database import trackers, courses, submissions  # noqa: E402
+from database import trackers, submissions  # noqa: E402
 from services import sendmail  # noqa: E402
 import common_functions as cf  # noqa: E402
 
 
 def inform_user(class_pages):
     start, end, day = cf.get_time_yesterday(-9)
-    # start = 1658707200
-    # end = start + 24*60*60
     with open('listOfHouses.json', 'r') as file:
         listOfHouses = json.load(file)
 
@@ -52,7 +50,7 @@ def inform_user(class_pages):
         if len(tracker) != 1:
             msg = 'Something went wrong.. No or to many trackers for nickname {n} found in the database.'
             msg.format(n=key)
-            raise Exception(msg)
+            raise KeyError(msg)
         else:
             tracker = tracker[0]
         text, html = create_text(tracker['name'], data[key])
@@ -92,12 +90,3 @@ def create_text(name, results):
     html += "<br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
 
     return text, html
-
-
-def test():
-    class_pages = courses.get(filter={'mode': 1})
-    inform_user(class_pages)
-
-
-if __name__ == '__main__':
-    test()
