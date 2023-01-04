@@ -96,14 +96,16 @@ def add_courses():
         courses.insert(course)
 
         if course['tracked_by'] != '':
-            if course['tracked_by'] not in info:
-                info[course['tracked_by']] = []
+            tracked_by = course['tracked_by'].split(';')
+            for truker in tracked_by:
+                if truker not in info:
+                    info[truker] = []
 
-            info[course['tracked_by']].append({
-                'ravelry_id': course['ravelry_id'],
-                'title': course['title'],
-                'start': course['active'][0][0]
-            })
+                info[truker].append({
+                    'ravelry_id': course['ravelry_id'],
+                    'title': course['title'],
+                    'start': course['active'][0][0]
+                })
         to_remove.append(course)
 
     for el in to_remove:
@@ -144,14 +146,16 @@ def update_mode():
         if changed:
             courses.update(course)
             if course['tracked_by'] != '':
-                if course['tracked_by'] not in info:
-                    info[course['tracked_by']] = []
+                tracked_by = course['tracked_by'].split(';')
+                for truker in tracked_by:
+                    if truker not in info:
+                        info[truker] = []
 
-                info[course['tracked_by']].append({
-                    'ravelry_id': course['ravelry_id'],
-                    'title': course['title'],
-                    'mode': course['mode']
-                })
+                    info[truker].append({
+                        'ravelry_id': course['ravelry_id'],
+                        'title': course['title'],
+                        'mode': course['mode']
+                    })
     return info
 
 
