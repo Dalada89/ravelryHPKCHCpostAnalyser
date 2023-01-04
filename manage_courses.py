@@ -17,7 +17,7 @@ def get_ravelry_id(url):
     if match is not None:
         ravelry_id = match.group(1)
 
-    return ravelry_id
+    return int(ravelry_id)
 
 
 def upload_add_course_file(courses=[]):
