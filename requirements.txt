@@ -5,3 +5,4 @@ pytz
 matplotlib
 pandas
 nextcloud-api-wrapper
+freezegun
