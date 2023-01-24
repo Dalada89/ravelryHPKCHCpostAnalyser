@@ -37,6 +37,13 @@ class TestManageCourses(unittest.TestCase):
 
     def test_get_ravelry_id(self):
         self.assertEqual(mc.get_ravelry_id(self.data['input'][0]['url']), self.data['ravelry_id'])
+        self.assertEqual(mc.get_ravelry_id(''), -1)
+        fake_url = 'https://this.is.a/too/short/id/1234/'
+        self.assertEqual(mc.get_ravelry_id(fake_url), -1)
+        fake_url = 'https://this.is.a/valid/id/1234567/'
+        self.assertEqual(mc.get_ravelry_id(fake_url), 1234567)
+        fake_url = 'https://this.url.is/1234567/also/valid/'
+        self.assertEqual(mc.get_ravelry_id(fake_url), 1234567)
 
     def test_is_active(self):
         with freeze_time(self.data['now']):
