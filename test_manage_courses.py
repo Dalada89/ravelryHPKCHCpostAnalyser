@@ -1,7 +1,8 @@
 from datetime import datetime
 import json
-from pathlib import Path
+from pathlib import Path, PurePath
 import unittest
+from copy import deepcopy
 from unittest.mock import MagicMock
 from freezegun import freeze_time
 import manage_courses as mc
@@ -24,6 +25,7 @@ class TestManageCourses(unittest.TestCase):
             mc.upload_add_course_file(courses=[])
 
         args = mc.nxc.upload_content.call_args_list
+        print(args)
         self.assertEqual(args[0][0][1], [self.data['input'][0]])
 
         # with input
@@ -72,7 +74,24 @@ class TestManageCourses(unittest.TestCase):
     def test_add_courses(self):
         self.assertTrue(True)
         print('\n-unittest for add_courses not implemented yet.')
+        new_courses = deepcopy(self.data['input'])
+        mc.nxc.get_file = MagicMock()
+        mc.nxc.get_file.return_value = new_courses
+        mc.ravelry.get_title = MagicMock()
+        mc.ravelry.get_title.side_effect = ['title1']
+        mc.courses.insert = MagicMock()
+        mc.upload_add_course_file = MagicMock()
+        mc.cf.tz_diff = MagicMock()
+        mc.cf.tz_diff.return_value = self.data['tz_diff']
 
+        info = mc.add_courses()
+        insert_courses = mc.courses.insert.call_args_list
+
+        with open(PurePath('temp1.json'), 'w') as fileobj:
+            json.dump(info, fileobj)
+        with open(PurePath('temp2.json'), 'w') as fileobj:
+            json.dump(insert_courses, fileobj)
+        mc.upload_add_course_file.
 
 if __name__ == '__main__':
     unittest.main()
