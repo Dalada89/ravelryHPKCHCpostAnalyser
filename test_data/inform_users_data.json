@@ -1,0 +1,179 @@
+{
+    "text": {
+        "name1": [
+            "Hi name1,\n\nHere are your daily ravelry results:\n\nOctober 12, 2022 - Class: Flying July 2022\ngryffindor: 1\nravenclaw: 0\nhufflepuff: 1\nslytherin: 0\nnqfy: 0\nsos: 0\n\n\nBye\nYour Ravenclaw Tracker",
+            "Hi Frida,\n\nHere are your daily ravelry results:\n\nOctober 12, 2022 - Class: Flying July 2022\ngryffindor: 1\nravenclaw: 0\nhufflepuff: 1\nslytherin: 0\nnqfy: 0\nsos: 0\n\n\nBye\nYour Ravenclaw Tracker"
+        ],
+        "name2": [
+            "Hi name2,\n\nHere are your daily ravelry results:\n\nOctober 12, 2022 - Class: Flying July 2022\ngryffindor: 1\nravenclaw: 0\nhufflepuff: 1\nslytherin: 0\nnqfy: 0\nsos: 0\n\n\nBye\nYour Ravenclaw Tracker",
+            "Hi Herbert,\n\nHere are your daily ravelry results:\n\nOctober 12, 2022 - Class: Flying July 2022\ngryffindor: 1\nravenclaw: 0\nhufflepuff: 1\nslytherin: 0\nnqfy: 0\nsos: 0\n\n\nBye\nYour Ravenclaw Tracker"
+        ],
+        "no_submissions": [
+            "Hi Frida,\n\nHere are your daily ravelry results:\n\nOctober 12, 2022 - Class: Flying July 2022\ngryffindor: 0\nravenclaw: 0\nhufflepuff: 0\nslytherin: 0\nnqfy: 0\nsos: 0\n\n\nBye\nYour Ravenclaw Tracker",
+            "Hi Herbert,\n\nHere are your daily ravelry results:\n\nOctober 12, 2022 - Class: Flying July 2022\ngryffindor: 0\nravenclaw: 0\nhufflepuff: 0\nslytherin: 0\nnqfy: 0\nsos: 0\n\n\nBye\nYour Ravenclaw Tracker"
+        ]
+    },
+    "html": {
+        "name1": [
+            "<html><body><p>Hi name1,<br><br>Here are your daily ravelry results:<br><br><h2>October 12, 2022 - Class: Flying July 2022</h2><br><ol><li>Houses:<ul><li>gryffindor: 1</li><li>ravenclaw: 0</li><li>hufflepuff: 1</li><li>slytherin: 0</li><li>nqfy: 0</li><li>sos: 0</li></ul><li>Posts:<ul><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#74\">74</a> - gamer1 (<em>hufflepuff</em>),</li><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#75\">75</a> - gamer2 (<em>gryffindor</em>),</li></ul></li></ol><br><br>Bye<br>Your Ravenclaw Tracker</p></body></html>",
+            "<html><body><p>Hi Frida,<br><br>Here are your daily ravelry results:<br><br><h2>October 12, 2022 - Class: Flying July 2022</h2><br><ol><li>Houses:<ul><li>gryffindor: 1</li><li>ravenclaw: 0</li><li>hufflepuff: 1</li><li>slytherin: 0</li><li>nqfy: 0</li><li>sos: 0</li></ul><li>Posts:<ul><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#74\">74</a> - gamer1 (<em>hufflepuff</em>),</li><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#75\">75</a> - gamer2 (<em>gryffindor</em>),</li></ul></li></ol><br><br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
+        ],
+        "name2": [
+            "<html><body><p>Hi name2,<br><br>Here are your daily ravelry results:<br><br><h2>October 12, 2022 - Class: Flying July 2022</h2><br><ol><li>Houses:<ul><li>gryffindor: 1</li><li>ravenclaw: 0</li><li>hufflepuff: 1</li><li>slytherin: 0</li><li>nqfy: 0</li><li>sos: 0</li></ul><li>Posts:<ul><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#74\">74</a> - gamer1 (<em>hufflepuff</em>),</li><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#75\">75</a> - gamer2 (<em>gryffindor</em>),</li></ul></li></ol><br><br>Bye<br>Your Ravenclaw Tracker</p></body></html>",
+            "<html><body><p>Hi Herbert,<br><br>Here are your daily ravelry results:<br><br><h2>October 12, 2022 - Class: Flying July 2022</h2><br><ol><li>Houses:<ul><li>gryffindor: 1</li><li>ravenclaw: 0</li><li>hufflepuff: 1</li><li>slytherin: 0</li><li>nqfy: 0</li><li>sos: 0</li></ul><li>Posts:<ul><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#74\">74</a> - gamer1 (<em>hufflepuff</em>),</li><li><a href=\"https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/4206244/51-75#75\">75</a> - gamer2 (<em>gryffindor</em>),</li></ul></li></ol><br><br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
+        ],
+        "no_submissions" : [
+            "<html><body><p>Hi Frida,<br><br>Here are your daily ravelry results:<br><br><h2>October 12, 2022 - Class: Flying July 2022</h2><br><ol><li>Houses:<ul><li>gryffindor: 0</li><li>ravenclaw: 0</li><li>hufflepuff: 0</li><li>slytherin: 0</li><li>nqfy: 0</li><li>sos: 0</li></ul><li>Posts:<ul></ul></li></ol><br><br>Bye<br>Your Ravenclaw Tracker</p></body></html>",
+            "<html><body><p>Hi Herbert,<br><br>Here are your daily ravelry results:<br><br><h2>October 12, 2022 - Class: Flying July 2022</h2><br><ol><li>Houses:<ul><li>gryffindor: 0</li><li>ravenclaw: 0</li><li>hufflepuff: 0</li><li>slytherin: 0</li><li>nqfy: 0</li><li>sos: 0</li></ul><li>Posts:<ul></ul></li></ol><br><br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
+        ]
+    },
+    "data": {
+        "name1": [
+            {
+                "title": "Class: Flying July 2022",
+                "posts": [
+                    {
+                        "date": 1665565200,
+                        "house": "hufflepuff",
+                        "id": 31,
+                        "name": "gamer1",
+                        "points": 0,
+                        "post_id": 74,
+                        "project": "thing",
+                        "ravelry_id": 4206244,
+                        "status": "presented",
+                        "verb": "made"
+                    },
+                    {
+                        "date": 1665568800,
+                        "house": "gryffindor",
+                        "id": 32,
+                        "name": "gamer2",
+                        "points": 0,
+                        "post_id": 75,
+                        "project": "thing",
+                        "ravelry_id": 4206244,
+                        "status": "presented",
+                        "verb": "made"
+                    }
+                ],
+                "day": "2022-10-12",
+                "ranking": {
+                    "gryffindor": 1,
+                    "ravenclaw": 0,
+                    "hufflepuff": 1,
+                    "slytherin": 0,
+                    "nqfy": 0,
+                    "sos": 0
+                }
+            }
+        ],
+        "name2": [
+            {
+                "title": "Class: Flying July 2022",
+                "posts": [
+                    {
+                        "date": 1665565200,
+                        "house": "hufflepuff",
+                        "id": 31,
+                        "name": "gamer1",
+                        "points": 0,
+                        "post_id": 74,
+                        "project": "thing",
+                        "ravelry_id": 4206244,
+                        "status": "presented",
+                        "verb": "made"
+                    },
+                    {
+                        "date": 1665568800,
+                        "house": "gryffindor",
+                        "id": 32,
+                        "name": "gamer2",
+                        "points": 0,
+                        "post_id": 75,
+                        "project": "thing",
+                        "ravelry_id": 4206244,
+                        "status": "presented",
+                        "verb": "made"
+                    }
+                ],
+                "day": "2022-10-12",
+                "ranking": {
+                    "gryffindor": 1,
+                    "ravenclaw": 0,
+                    "hufflepuff": 1,
+                    "slytherin": 0,
+                    "nqfy": 0,
+                    "sos": 0
+                }
+            }
+        ]
+    },
+    "yesterday": {
+        "start": 1665558001,
+        "end": 1665644400,
+        "day": "2022-10-12"
+    },
+    "names": ["name1", "name2"],
+    "courses" : [
+        {
+            "active": [
+                [
+                    1664582400,
+                    1667174400
+                ]
+            ],
+            "base_points": 150,
+            "id": 2,
+            "last_post": 0,
+            "mode": 1,
+            "ravelry_id": 4206244,
+            "term": "S2022",
+            "title": "Class: Flying July 2022",
+            "tracked_by": "name1; name2",
+            "type": "class"
+        }
+    ],
+    "trackers": [
+        [{
+            "id": 1,
+            "mail": "a@b.com",
+            "name": "Frida",
+            "nickname": "name1",
+            "updated": 1661889779
+        }],
+        [{
+            "id": 2,
+            "mail": "c@d.com",
+            "name": "Herbert",
+            "nickname": "name2",
+            "updated": 1661889779
+        }]
+    ],
+    "submissions": [
+        {
+            "date": 1665565200,
+            "house": "hufflepuff",
+            "id": 31,
+            "name": "gamer1",
+            "points": 0,
+            "post_id": 74,
+            "project": "thing",
+            "ravelry_id": 4206244,
+            "status": "presented",
+            "verb": "made"
+        },
+        {
+            "date": 1665568800,
+            "house": "gryffindor",
+            "id": 32,
+            "name": "gamer2",
+            "points": 0,
+            "post_id": 75,
+            "project": "thing",
+            "ravelry_id": 4206244,
+            "status": "presented",
+            "verb": "made"
+        }
+    ]
+}

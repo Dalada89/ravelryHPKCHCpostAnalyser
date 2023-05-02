@@ -2,6 +2,7 @@ import mysql.connector
 from database import submissions, courses, general
 from analysis import course_pages
 from report import inform_users, nextcloud_report
+import manage_courses
 
 
 def main():
@@ -25,6 +26,8 @@ def main():
     class_pages = courses.get(filter={'mode': 1})
     inform_users.inform_user(class_pages)
     nextcloud_report.create_reports()
+
+    manage_courses.main()
 
 
 if __name__ == '__main__':

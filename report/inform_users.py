@@ -3,53 +3,54 @@ from pathlib import Path
 import sys
 import json
 sys.path.insert(0, str(Path.cwd()))
-from database import trackers, courses, submissions
-from services import sendmail
-import common_functions as cf
+from database import trackers, submissions  # noqa: E402
+from services import sendmail  # noqa: E402
+import common_functions as cf  # noqa: E402
 
 
 def inform_user(class_pages):
     start, end, day = cf.get_time_yesterday(-9)
-    # start = 1658707200
-    # end = start + 24*60*60
     with open('listOfHouses.json', 'r') as file:
         listOfHouses = json.load(file)
 
     data = {}
 
     for clss in class_pages:
-        if clss['tracked_by'] == '':
-            continue
-        if clss['tracked_by'].lower() not in data:
-            data[clss['tracked_by'].lower()] = []
-        
-        filter = {
-            'ravelry_id': clss['ravelry_id']
-        }
-        posts = submissions.get(filter=filter, start=start, end=end)
-        posts = sorted(posts, key=lambda x: x['post_id'])
+        tracked_by = clss['tracked_by'].split(';')
 
-        element = {
-            'title': clss['title'],
-            'posts': posts,
-            'day': day,
-            'ranking': {}
-        }
-        
-        for house in listOfHouses:
-            element['ranking'][house] = 0
+        for truker in tracked_by:
+            if truker == '':
+                continue
+            if truker.lower() not in data:
+                data[truker.lower()] = []
 
-        for post in posts:
-            element['ranking'][post['house']] += 1
+            filter = {
+                'ravelry_id': clss['ravelry_id']
+            }
+            posts = submissions.get(filter=filter, start=start, end=end)
+            posts = sorted(posts, key=lambda x: x['post_id'])
 
-        data[clss['tracked_by'].lower()].append(element)
+            element = {
+                'title': clss['title'],
+                'posts': posts,
+                'day': day,
+                'ranking': {}
+            }
+
+            for house in listOfHouses:
+                element['ranking'][house] = 0
+
+            for post in posts:
+                element['ranking'][post['house']] += 1
+
+            data[truker.lower()].append(element)
 
     for key in data:
         tracker = trackers.get(filter={'nickname': key})
         if len(tracker) != 1:
             msg = 'Something went wrong.. No or to many trackers for nickname {n} found in the database.'
             msg.format(n=key)
-            raise Exception(msg)
+            raise KeyError(msg)
         else:
             tracker = tracker[0]
         text, html = create_text(tracker['name'], data[key])
@@ -76,7 +77,7 @@ def create_text(name, results):
             html += "<li>{house}: {n}</li>".format(house=key, n=res['ranking'][key])
         html += "</ul><li>Posts:<ul>"
         for post in res['posts']:
-            url = cf.create_url(post['ravelry_id'],post_id=post['post_id'])
+            url = cf.create_url(post['ravelry_id'], post_id=post['post_id'])
             html += '<li><a href="{url}">{pid}</a> - {name} (<em>{house}</em>),</li>'.format(url=url,
                                                                                              pid=post['post_id'],
                                                                                              name=post['name'],
@@ -85,16 +86,7 @@ def create_text(name, results):
         text += "\n"
         html += "<br>"
 
-    text += "\n Bye\n Your Ravenclaw Tracker"
+    text += "\nBye\nYour Ravenclaw Tracker"
     html += "<br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
 
     return text, html
-
-
-def test():
-    class_pages = courses.get(filter={'mode': 1})
-    inform_user(class_pages)
-
-
-if __name__ == '__main__':
-    test()

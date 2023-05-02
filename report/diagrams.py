@@ -42,7 +42,8 @@ def plot_timeline(data, course, savedir):
             prepared.append(el)
             cur_day = day
         counter[item['house']] += 1
-
+    if not prepared:
+        return None
     df = pd.DataFrame(prepared)
 
     fig, ax = plt.subplots()
