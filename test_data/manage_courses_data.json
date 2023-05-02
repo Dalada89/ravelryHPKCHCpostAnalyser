@@ -1,0 +1,36 @@
+{
+    "input": [
+        {
+            "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/1337421/",
+            "term": "W2023",
+            "active": [
+                [
+                    "2022-10-01",
+                    "2022-10-31"
+                ]
+            ],
+            "type": "class",
+            "tracked_by": "nickname",
+            "base_points": 15
+        },
+        {
+            "url": "https://www.ravelry.com/discuss/hp-knitting-crochet-house-cup/1247331/",
+            "term": "S2023",
+            "active": [
+                [
+                    "2023-01-01",
+                    "2023-01-31"
+                ]
+            ],
+            "type": "class",
+            "tracked_by": "dalada",
+            "base_points": 16
+        }
+    ],
+    "now": "2023-01-23",
+    "ravelry_id": 1337421,
+    "tz_diff": 1,
+    "output":[
+
+    ]
+}

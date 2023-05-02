@@ -47,7 +47,8 @@ def report_classes():
     for aclass in active_classes:
         data = submissions.get(filter={'ravelry_id': aclass['ravelry_id']})
         directory = prepare_path(aclass)
-        diagrams.plot_timeline(data, aclass, directory)
+        if data:
+            diagrams.plot_timeline(data, aclass, directory)
 
         report = '# {title}\n\n'.format(title=aclass['title'])
         now = datetime.now().astimezone(pytz.timezone(tz))
@@ -57,7 +58,10 @@ def report_classes():
         url_last_page = url_last_page[0:-(len(str(aclass['last_post']))+1)]
         report += '[First Page]({url_f}) - [Last Page]({url_l})\n\n'.format(url_f=url_first_page, url_l=url_last_page)
 
-        report += '![timeline](./timeline.png)\n\n'
+        if data:
+            report += '![timeline](./timeline.png)\n\n'
+        else:
+            report += '(As soon as data is available there will be a timeline here)'
 
         report += '## Timeline Submissions\n\n'
         report += 'In total: {n} submissions\n\n'.format(n=len(data))
