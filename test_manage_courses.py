@@ -91,7 +91,8 @@ class TestManageCourses(unittest.TestCase):
             json.dump(info, fileobj)
         with open(PurePath('temp2.json'), 'w') as fileobj:
             json.dump(insert_courses, fileobj)
-        mc.upload_add_course_file.
+        # mc.upload_add_course_file.
+
 
 if __name__ == '__main__':
     unittest.main()
