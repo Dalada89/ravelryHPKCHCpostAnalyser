@@ -32,6 +32,8 @@ def extract_data_from_curser(mycursor):
     for row in myresults:
         element_dict = {}
         for index, element in enumerate(row):
+            if type(element) == bytes:
+                element = json.loads(element)
             element_dict[columns[index]] = element
         results.append(element_dict)
 
