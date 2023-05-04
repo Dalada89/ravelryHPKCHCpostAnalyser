@@ -1,15 +1,20 @@
 import locale
 from pathlib import Path
+from datetime import datetime
 import sys
 import json
 sys.path.insert(0, str(Path.cwd()))
-from database import trackers, submissions  # noqa: E402
+from database import trackers, submissions, courses  # noqa: E402
 from services import sendmail  # noqa: E402
 import common_functions as cf  # noqa: E402
 
 
 def inform_user(class_pages):
     start, end, day = cf.get_time_yesterday(-9)
+    prepare_data(class_pages, start, end, day)
+
+
+def prepare_data(class_pages, start, end, day):
     with open('listOfHouses.json', 'r') as file:
         listOfHouses = json.load(file)
 
@@ -90,3 +95,31 @@ def create_text(name, results):
     html += "<br>Bye<br>Your Ravenclaw Tracker</p></body></html>"
 
     return text, html
+
+
+def main():
+    fail = False
+    if len(sys.argv) == 1:
+        msg = 'Please give a date argument like %Y-%m-%d. Example: "2023-05-04"'
+        fail = True
+    day_str = sys.argv[1]
+    try:
+        date = datetime.strptime(day_str, "%Y-%m-%d")
+    except ValueError:
+        msg = 'The given date {date} does not match the format %Y-%m-%d.'.format(date=day_str)
+        fail = True
+
+    if fail:
+        print(msg)
+        return None
+
+    # print(date.astimezone().tzinfo)
+    class_pages = courses.get(filter={'mode': 1})
+    diff = cf.tz_diff(date, 'America/Los_Angeles', 'Europe/Berlin')
+    start, end = cf.get_start_end(date, diff_to_utc=diff*-1)
+    prepare_data(class_pages=class_pages, start=start, end=end, day=date)
+    # print(datetime.now(timezone.utc).astimezone().tzinfo)
+
+
+if __name__ == '__main__':
+    main()

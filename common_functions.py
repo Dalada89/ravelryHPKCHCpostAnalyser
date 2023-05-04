@@ -30,16 +30,17 @@ def create_url(ravelry_id, post_id=None, pagegiven=None):
     return url
 
 
-def get_time_yesterday(diff_to_utc=0, day=0):
+def get_time_yesterday(diff_to_utc: int = 0):
     """
     get timestamp for yesterday in defined timezone
     """
-    if day == 0:
-        day = datetime.today() - timedelta(days=1)
-    else:
-        # prüfen was day ist..
-        day = day
+    day = datetime.today() - timedelta(days=1)
+    start, end = get_start_end(day, diff_to_utc=diff_to_utc)
 
+    return start, end, day
+
+
+def get_start_end(day: datetime, diff_to_utc: int = 0):
     start = datetime(day.year, day.month, day.day, 0, 0, 0) \
         - timedelta(hours=diff_to_utc)  # .timestamp()
     start_unix = int(start.timestamp())
@@ -47,7 +48,7 @@ def get_time_yesterday(diff_to_utc=0, day=0):
         - timedelta(hours=diff_to_utc)
     end_unix = int(end.timestamp())
     # print(str(start_unix) + " to " + str(end_unix))
-    return start_unix, end_unix, day
+    return start_unix, end_unix
 
 
 def tz_diff(date: datetime, target: str, home: str) -> int:
