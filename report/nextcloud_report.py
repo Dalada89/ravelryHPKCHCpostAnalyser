@@ -43,6 +43,7 @@ def report_classes():
     This function shall create a report for classes and save it into the nextcloud folder
     """
     active_classes = courses.get(filter={'mode': 1, 'type': 'class'})
+    active_classes.extend(courses.get(filter={'mode': 1, 'type': 'det'}))
 
     for aclass in active_classes:
         data = submissions.get(filter={'ravelry_id': aclass['ravelry_id']})
