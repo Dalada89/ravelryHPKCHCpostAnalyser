@@ -11,10 +11,10 @@ class TestStringMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open(Path('./test_data/test_side_error.html'), 'r', encoding='utf-8') as html:
+        with open(Path('./unittest/test_data/test_side_error.html'), 'r', encoding='utf-8') as html:
             soup = bs(html.read(), 'html.parser')
             cls.webpage = soup
-        with open(Path('./test_data/db.json'), 'r') as jsonfile:
+        with open(Path('./unittest/test_data/db.json'), 'r') as jsonfile:
             cls.truths = json.load(jsonfile)
         cls.further_data = {
             'ravelry_id': 4153080,
@@ -23,7 +23,7 @@ class TestStringMethods(unittest.TestCase):
         }
         cls.extracted, cls.last_post = rw.analysePage(cls.webpage, cls.further_data)
 
-        with open(Path('./test_data/extracted_db.json'), 'w') as jsonfile:
+        with open(Path('./unittest/test_data/extracted_db.json'), 'w') as jsonfile:
             json.dump(cls.extracted, jsonfile)
 
     def test_name(self):

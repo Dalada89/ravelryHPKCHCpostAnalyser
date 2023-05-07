@@ -5,18 +5,22 @@ import unittest
 from copy import deepcopy
 from unittest.mock import MagicMock
 from freezegun import freeze_time
-import manage_courses as mc
+import sys
+sys.path.insert(0, str(Path.cwd()))
+import manage_courses as mc  # noqa: E402
 
 
 class TestManageCourses(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open(Path('./test_data/manage_courses_data.json'), 'r') as jsonfile:
+        with open(Path('./unittest/test_data/manage_courses_data.json'), 'r') as jsonfile:
             cls.data = json.load(jsonfile)
             cls.data['now'] = datetime.strptime(cls.data['now'], '%Y-%m-%d')
     # def test_add_courses(self):
     #     self.assertEqual(manage_courses.some_function(x), 4)
+
+    # def setUp()
 
     def test_upload_add_course_file(self):
         mc.nxc.upload_content = MagicMock()

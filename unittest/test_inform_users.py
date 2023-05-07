@@ -13,7 +13,7 @@ class TestStringMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open(Path('./test_data/inform_users_data.json'), 'r') as jsonfile:
+        with open(Path('./unittest/test_data/inform_users_data.json'), 'r') as jsonfile:
             cls.data = json.load(jsonfile)
             cls.data['data']['name1'][0]['day'] = datetime.strptime(cls.data['data']['name1'][0]['day'], "%Y-%m-%d")
             cls.data['data']['name2'][0]['day'] = datetime.strptime(cls.data['data']['name2'][0]['day'], "%Y-%m-%d")
