@@ -23,11 +23,13 @@ def main():
     mydb.close()
 
     # ravelry_id was popped
+    info_to_send = {}
+    info_to_send['new_courses'] = manage_courses.add_courses()
     class_pages = courses.get(filter={'mode': 1})
-    inform_users.inform_user(class_pages)
     nextcloud_report.create_reports()
-
-    manage_courses.main()
+    info_to_send['changed'] = manage_courses.update_mode()
+    inform_users.inform_user(class_pages)
+    manage_courses.inform_users(info_to_send)
 
 
 if __name__ == '__main__':
