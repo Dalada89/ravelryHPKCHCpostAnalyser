@@ -6,6 +6,8 @@ import manage_courses
 
 
 def main():
+    info_to_send = {}
+    info_to_send['new_courses'] = manage_courses.add_courses()
     class_pages = courses.get(filter={'mode': 1})
     database = course_pages.analyse_game_pages(class_pages)
 
@@ -23,8 +25,6 @@ def main():
     mydb.close()
 
     # ravelry_id was popped
-    info_to_send = {}
-    info_to_send['new_courses'] = manage_courses.add_courses()
     class_pages = courses.get(filter={'mode': 1})
     nextcloud_report.create_reports()
     info_to_send['changed'] = manage_courses.update_mode()
