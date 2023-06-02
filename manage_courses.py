@@ -47,7 +47,7 @@ def upload_add_course_file(courses=[]):
     nxc.upload_content(nxc_path_add_courses, courses)
 
 
-def add_courses():
+def add_courses(mycursor=None):
 
     new_courses = nxc.get_file(nxc_path_add_courses)
 
@@ -93,7 +93,10 @@ def add_courses():
         course['mode'] = 0
         course['last_post'] = 0
         course['type'] = course['type'].lower()
-        courses.insert(course)
+        if mycursor is not None:
+            courses.insert(course, mycursor=mycursor)
+        else:
+            courses.insert(course)
 
         if course['tracked_by'] != '':
             tracked_by = course['tracked_by'].split(';')
@@ -116,7 +119,7 @@ def add_courses():
     return info
 
 
-def update_mode():
+def update_mode(mycursor=None):
     """
     This function shall update the modus of all courses.
     modes:
@@ -125,9 +128,12 @@ def update_mode():
         - 2: waiting for points, submissions not possible
         - 3: closed, points graded
     """
-
-    db_courses = courses.get(filter={'mode': 0})
-    db_courses.extend(courses.get(filter={'mode': 1}))
+    if mycursor is not None:
+        db_courses = courses.get(filter={'mode': 0}, mycursor=mycursor)
+        db_courses.extend(courses.get(filter={'mode': 1}, mycursor=mycursor))
+    else:
+        db_courses = courses.get(filter={'mode': 0})
+        db_courses.extend(courses.get(filter={'mode': 1}))
     info = {}
     for course in db_courses:
         changed = False
@@ -144,7 +150,10 @@ def update_mode():
                 changed = True
 
         if changed:
-            courses.update(course)
+            if mycursor is not None:
+                courses.update(course, mycursor=mycursor)
+            else:
+                courses.update(course)
             if course['tracked_by'] != '':
                 tracked_by = course['tracked_by'].split(';')
                 for truker in tracked_by:
