@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime, timedelta
 import locale
 import re
@@ -94,9 +95,9 @@ def add_courses(mycursor=None):
         course['last_post'] = 0
         course['type'] = course['type'].lower()
         if mycursor is not None:
-            courses.insert(course, mycursor=mycursor)
+            courses.insert(deepcopy(course), mycursor=mycursor)
         else:
-            courses.insert(course)
+            courses.insert(deepcopy(course))
 
         if course['tracked_by'] != '':
             tracked_by = course['tracked_by'].split(';')
