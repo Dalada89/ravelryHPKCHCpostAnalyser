@@ -74,7 +74,7 @@ def add_courses(mycursor=None):
             for date in el:
                 try:
                     temp = datetime.strptime(date, '%Y-%m-%d')
-                    timezonediff = cf.tz_diff(temp, 'UTC', 'Europe/Berlin')
+                    timezonediff = cf.tz_diff(temp, 'America/Los_Angeles', 'Europe/Berlin')
                     temp = temp + timedelta(hours=timezonediff)
                     active.append(int(temp.timestamp()))
                 except TypeError:
