@@ -10,8 +10,8 @@ from database import submissions, courses  # noqa: E402
 import common_functions as cf  # noqa: E402
 from report import diagrams  # noqa: E402
 
-tz = 'UTC'
-date_pattern = '%b %-d, %Y %H:%M UTC'
+tz = 'America/Los_Angeles'
+date_pattern = '%b %-d, %Y %H:%M PT'
 with open('listOfHouses.json', 'r') as file:
     listOfHouses = json.load(file)
 
