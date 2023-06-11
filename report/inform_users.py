@@ -11,7 +11,7 @@ import common_functions as cf  # noqa: E402
 
 def inform_user(class_pages, mycursor=None):
     start, end, day = cf.get_time_yesterday(-9)
-    prepare_data(class_pages, start, end, day)
+    prepare_data(class_pages, start, end, day, mycursor)
 
 
 def prepare_data(class_pages, start, end, day, mycursor):
