@@ -14,7 +14,7 @@ def inform_user(class_pages, mycursor=None):
     prepare_data(class_pages, start, end, day, mycursor)
 
 
-def prepare_data(class_pages, start, end, day, mycursor):
+def prepare_data(class_pages, start, end, day, mycursor=None):
     with open('listOfHouses.json', 'r') as file:
         listOfHouses = json.load(file)
 
