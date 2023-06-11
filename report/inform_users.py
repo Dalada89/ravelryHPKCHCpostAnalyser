@@ -9,12 +9,12 @@ from services import sendmail  # noqa: E402
 import common_functions as cf  # noqa: E402
 
 
-def inform_user(class_pages):
+def inform_user(class_pages, mycursor=None):
     start, end, day = cf.get_time_yesterday(-9)
     prepare_data(class_pages, start, end, day)
 
 
-def prepare_data(class_pages, start, end, day):
+def prepare_data(class_pages, start, end, day, mycursor):
     with open('listOfHouses.json', 'r') as file:
         listOfHouses = json.load(file)
 
@@ -32,7 +32,10 @@ def prepare_data(class_pages, start, end, day):
             filter = {
                 'ravelry_id': clss['ravelry_id']
             }
-            posts = submissions.get(filter=filter, start=start, end=end)
+            if mycursor is None:
+                posts = submissions.get(filter=filter, start=start, end=end)
+            else:
+                posts = submissions.get(filter=filter, start=start, end=end, mycursor=mycursor)
             posts = sorted(posts, key=lambda x: x['post_id'])
 
             element = {

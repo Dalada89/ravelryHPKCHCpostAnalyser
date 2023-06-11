@@ -7,9 +7,10 @@ import manage_courses
 
 def main():
     mydb = general.connect_to_database()
-    mycursor = mydb.cursor()
+    mycursor = mydb.cursor(buffered=True)
     info_to_send = {}
     info_to_send['new_courses'] = manage_courses.add_courses(mycursor=mycursor)
+    mydb.commit()
     class_pages = courses.get(filter={'mode': 1})
     database = course_pages.analyse_game_pages(class_pages)
 
@@ -20,12 +21,14 @@ def main():
             msg = 'Submission from {name} ({house}) in course {course} is already stored.'
             msg = msg.format(name=entry['name'], house=entry['house'], course=entry['ravelry_id'])
             print(msg)
-
+    mydb.commit()
     # ravelry_id was popped
     class_pages = courses.get(filter={'mode': 1}, mycursor=mycursor)
+    mydb.commit()
     nextcloud_report.create_reports()
     info_to_send['changed'] = manage_courses.update_mode(mycursor=mycursor)
-    inform_users.inform_user(class_pages)
+    mydb.commit()
+    inform_users.inform_user(class_pages, mycursor=mycursor)
     manage_courses.inform_users(info_to_send)
     mydb.commit()
     mycursor.close()
