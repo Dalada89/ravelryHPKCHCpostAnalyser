@@ -44,6 +44,7 @@ def report_classes():
     """
     active_classes = courses.get(filter={'mode': 1, 'type': 'class'})
     active_classes.extend(courses.get(filter={'mode': 1, 'type': 'det'}))
+    active_classes.extend(courses.get(filter={'mode': 1, 'type': 'quid'}))
 
     for aclass in active_classes:
         data = submissions.get(filter={'ravelry_id': aclass['ravelry_id']})
